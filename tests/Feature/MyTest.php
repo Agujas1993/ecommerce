@@ -20,13 +20,15 @@ class MyTest extends TestCase
     public function it_loads_the_nav_bar()
     {
         self::markTestIncomplete();
-        Livewire::test(Navigation::class)
-        ->assertSee('Categorías');
+        Livewire::test(Navigation::class)->assertStatus(200)
+        ->assertSee('Categorías')
+        ->assertViewHas('categories');
     }
     /** @test */
     public function it_loads_the_search_bar()
     {
         Livewire::test(Search::class)
+            ->assertStatus(200)
             ->assertSee('¿Estás buscando algún producto?');
     }
 
@@ -34,6 +36,7 @@ class MyTest extends TestCase
     public function it_loads_the_dropdown_cart()
     {
         Livewire::test(DropdownCart::class)
+            ->assertStatus(200)
             ->assertSee('No tiene agregado ningún item en el carrito');
     }
 
@@ -41,6 +44,7 @@ class MyTest extends TestCase
     public function it_loads_the_dropdown_cart_responsive()
     {
         Livewire::test(CartMovil::class)
+            ->assertStatus(200)
             ->assertSee('Carrito de compras');
     }
 }
