@@ -6,8 +6,10 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
-class ExampleTest extends DuskTestCase
+class SubcategoryTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
     /** @test */
     public function testBasicExample()
     {
@@ -15,7 +17,7 @@ class ExampleTest extends DuskTestCase
             $browser->visit('/')
                 ->click('Categorías')
                 ->mouseover('Celulares y tablets')
-                    ->assertSee('Celulares y Smartphones');
+                ->assertSee('Celulares y Smartphones');
         });
     }
 }
