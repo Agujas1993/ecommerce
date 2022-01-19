@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Livewire\ShoppingCart;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,8 @@ Route::get('products/{product}', [ProductsController::class, 'show'])->name('pro
 Route::get('/deletecart', function () {
     \Cart::destroy();
 });
+
+Route::get('shopping-cart', ShoppingCart::class)->name('shopping-cart');
 
 Route::get('search', SearchController::class)->name('search');
 
