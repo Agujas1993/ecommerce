@@ -14,10 +14,10 @@
                 @foreach($category->subcategories as $subcategory)
                     <li class="py-2 text-sm ">
                         <a class="cursor-pointer hover:text-orange-500
-                        capitalize {{ $subcategoria == $subcategory->name ?
-                        'text-orange-500 font-semibold' : '' }}"
+                        capitalize {{ $subcategoria == $subcategory->name ? 'text-orange-500
+                            font-semibold' : '' }}"
                            wire:click="$set('subcategoria', '{{ $subcategory->name }}')"
-                           href="">{{ $subcategory->name }}</a>
+                           >{{ $subcategory->name }}</a>
                     </li>
                 @endforeach
             </ul>
@@ -28,7 +28,7 @@
                         <a class="cursor-pointer hover:text-orange-500 capitalize{{ $marca == $brand->name ?
                         'text-orange-500 font-semibold' : ''}}"
                            wire:click="$set('marca', '{{ $brand->name }}')"
-                           href="">{{ $brand->name }}</a>
+                           >{{ $brand->name }}</a>
                     </li>
                 @endforeach
             </ul>

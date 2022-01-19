@@ -23,7 +23,27 @@ class CategoriesTest extends DuskTestCase
                 ->assertSee('Consola y videojuegos')
                 ->assertSee('Computación')
                 ->assertSee('Moda')
-                    ->screenshot('example-test');
+                    ->screenshot('categories-test');
+        });
+    }
+
+    /** @test */
+    public function it_shows_the_categories_details()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/')
+                ->assertSee('CELULARES Y TABLETS')
+                ->assertSee('Ver más')
+                ->click('.text-orange-500')
+                ->assertSee('Celulares y tablets')
+                ->assertSee('Subcategorías')
+                ->assertSee('Marcas')
+                ->assertSee('ELIMINAR FILTROS')
+                ->assertSee('€')
+                ->assertPresent('img')
+                ->assertPresent('h1.text-lg')
+                ->assertPresent('p.font-bold')
+                ->screenshot('categoriesDetails-test');
         });
     }
 }

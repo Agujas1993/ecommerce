@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class MyTest extends TestCase
+class NavTest extends TestCase
 {
 
     use RefreshDatabase;
