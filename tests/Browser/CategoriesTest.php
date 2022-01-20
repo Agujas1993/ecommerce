@@ -82,17 +82,35 @@ class CategoriesTest extends DuskTestCase
         $product3 = Category::skip(2)->first()->products()->skip(2)->first();
         $product4 = Category::skip(2)->first()->products()->skip(3)->first();
         $product5 = Category::skip(2)->first()->products()->skip(4)->first();
-        $product6 = Category::skip(2)->first()->products()->create([
+
+        $subcategory = $category3->subcategories()->first()->id;
+        $brand = $category3->brands()->first()->id;
+
+        $product6 = Product::factory()->create([
             'name' => 'Xbox',
             'slug' => 'xbox',
             'description' => 'xbox 512GB',
-            'subcategory_id' => $category3->subcategories->id,
-            'brand_id' => $category3->brands->id,
-            'price' => '22.99',
+            'subcategory_id' => $subcategory,
+            'brand_id' => $brand,
+            'price' => '262.99',
             'quantity' => '20',
-            'status' => 1]);
+            'status' => 1
+        ]);
 
-        $this->browse(function (Browser $browser) use ($category3, $product1, $product2, $product3, $product4, $product5, $product6) {
+        $product7 = Product::factory()->create([
+            'name' => 'Playstation',
+            'slug' => 'Playstation',
+            'description' => 'Playstation 1TB',
+            'subcategory_id' => $subcategory,
+            'brand_id' => $brand,
+            'price' => '299.99',
+            'quantity' => '20',
+            'status' => 1
+        ]);
+
+        $category3 = strtoupper($category3->name);
+
+        $this->browse(function (Browser $browser) use ($category3, $product1, $product2, $product3, $product4, $product5, $product6, $product7) {
             $browser->visit('/')
                 ->assertSee($category3)
                 ->assertSee('Ver más')
@@ -102,6 +120,7 @@ class CategoriesTest extends DuskTestCase
                 ->assertSee($product4->name)
                 ->assertSee($product5->name)
                 ->assertDontSee($product6->name)
+                ->assertDontSee($product7->name)
                 ->screenshot('5_published_products_from_a_category-test');
         });
     }
