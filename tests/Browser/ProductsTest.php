@@ -41,4 +41,14 @@ class ProductsTest extends DuskTestCase
                 ->screenshot('buttonLimits-test');
         });
     }
+
+    /** @test */
+    public function it_is_possible_to_access_the_detail_view_of_a_product()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('products/23')
+                ->assertUrlIs('http://localhost:8000/products/23')
+                ->screenshot('detailsAccess-test');
+        });
+    }
 }

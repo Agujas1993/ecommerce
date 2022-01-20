@@ -41,6 +41,7 @@ abstract class DuskTestCase extends BaseTestCase
                 'disable-gpu',
                 '-no-sandbox',
                 '--disable-dev-shm-usage',
+                '--window-size=1920,1080',
             ]);
     })->all());
 

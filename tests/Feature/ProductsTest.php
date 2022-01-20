@@ -6,6 +6,7 @@ use App\Http\Livewire\AddCartItem;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Subcategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
@@ -71,19 +72,23 @@ class ProductsTest extends TestCase
     public function it_is_possible_to_see_the_product_details()
     {
 
-        $celulares = Category::factory()->create(["name" => "Celulares y tablets",
+        $celulares = Category::factory()->create([
+            'id' => '1',
+            "name" => "Celulares y tablets",
             "slug" => "celulares-y-tablets",
             "icon" => 'algo',
             "image" => "categories/84b8093bb4bc5ec8f29c8edc374caf22.png",
         ]);
 
-        $celulares->subcategories()->create([
+        $smartphones = Subcategory::factory()->create([
+            'id' => '1',
             'name' => 'Celulares y smartphones',
             'slug' => Str::slug('Celulares y smartphones'),
             "image" => "categories/84b8093bb4bc5ec8f29c8edc374caf22.png",
+            'category_id' => '1'
         ]);
 
-        Brand::factory()->create(['id' => '1', 'name' => 'Oppo']);
+        $celulares->brands()->create(['name' => 'Oppo']);
 
 
         $celulares->products()->create($this->withData(['name' => 'Oppo 12']));
