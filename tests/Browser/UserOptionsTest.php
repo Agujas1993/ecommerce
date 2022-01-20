@@ -30,8 +30,8 @@ class UserOptionsTest extends DuskTestCase
                 ->type('password', '123')
                 ->press('INICIAR SESIÓN')
                 ->click('.rounded-full .object-cover')
-                ->assertSeeIn('.rounded-md .ring-1','Logout')
                 ->assertSeeIn('.rounded-md .ring-1','Perfil')
+                ->assertSeeIn('.rounded-md .ring-1','Logout')
                 ->screenshot('logged-test');
         });
     }
