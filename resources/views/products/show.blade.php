@@ -39,6 +39,7 @@ $product->brand->name }}</a></p>
                             @endif
                     </div>
                 </div>
+                {{ $product->description }}
             </div>
         </div>
     </div>

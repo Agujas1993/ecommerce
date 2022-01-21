@@ -12,21 +12,25 @@ class ProductsTest extends DuskTestCase
     /** @test */
     public function the_products_details_are_shown()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('products/1')
-                ->assertPresent('h1.text-xl')
-                    ->assertPresent('.text-trueGray-700')
-                    ->assertSee('Marca:')
+        $category = Category::skip(2)->first();
+        $product = $category->products()->first();
+        $brand = $product->brand;
+
+        $this->browse(function (Browser $browser) use($product, $brand) {
+            $browser->visit('products/' . $product->id)
+                ->assertSee($product->name)
+                    ->assertSee('Marca: ' . ucfirst($brand->name))
                     ->assertPresent('a.underline')
-                    ->assertSee('€')
+                    ->assertSee($product->price)
                     ->assertPresent('p.text-2xl')
-                    ->assertSee('Stock disponible:')
+                    ->assertSee('Stock disponible: ' . $product->quantity)
                     ->assertPresent('span.font-semibold ')
                     ->assertButtonEnabled('+')
                     ->assertButtonDisabled('-')
                     ->assertButtonEnabled('AGREGAR AL CARRITO DE COMPRAS')
+                ->assertSee($product->description)
                 ->assertPresent('div.flexslider')
-                ->assertPresent('img')
+                ->assertPresent('img.flex-active')
                 ->screenshot('productDetails-test');
         });
     }
@@ -34,8 +38,10 @@ class ProductsTest extends DuskTestCase
     /** @test */
     public function the_button_limits_are_ok()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('products/23')
+        $product1 = Category::skip(1)->first()->products()->skip(1)->first();
+
+        $this->browse(function (Browser $browser) use ($product1) {
+            $browser->visit('products/' . $product1->id)
                 ->assertButtonEnabled('+')
                 ->assertButtonDisabled('-')
                 ->assertButtonEnabled('AGREGAR AL CARRITO DE COMPRAS')
@@ -47,7 +53,7 @@ class ProductsTest extends DuskTestCase
     public function it_is_possible_to_access_the_detail_view_of_a_product()
     {
 
-        $product1 = Category::skip(1)->first()->products()->first();
+        $product1 = Category::skip(1)->first()->products()->skip(1)->first();
 
         $this->browse(function (Browser $browser) use($product1){
             $browser->visit('products/' . $product1->id)
@@ -55,15 +61,16 @@ class ProductsTest extends DuskTestCase
                 ->screenshot('productDetailsAccess-test');
         });
 
+        $category = Category::skip(2)->first();
+        $product2 = $category->products()->first();
 
-        $product2 = Category::skip(2)->first()->products()->first();
-
-        $this->browse(function (Browser $browser) use($product2) {
+        $category = strtoupper($category->name);
+        $this->browse(function (Browser $browser) use($category,$product2) {
             $browser->visit('/')
                 ->click('@categorias')
-                ->assertSee('Consola y videojuegos')
+                ->assertSee($category)
                 ->click('ul.bg-white > li:nth-of-type(3) > a')
-                ->click('li:nth-of-type(2) > article > div.py-4 > h1 > a')
+                ->click('li:nth-of-type(3) > article > div.py-4 > h1 > a')
                 ->assertUrlIs('http://localhost:8000/products/' . $product2->id)
                 ->screenshot('productDetailsAccess2-test');
         });
