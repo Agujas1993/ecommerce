@@ -176,4 +176,70 @@ class CategoriesTest extends DuskTestCase
                 ->screenshot('5_published_products_from_a_category-test');
         });
     }
+
+    /** @test */
+    public function it_filters_by_subcategories()
+    {
+        $category = Category::first();
+        $subcategory1 = $category->subcategories()->first();
+        $categoryTitle = $category->slug;
+        $subcategory2 = $category->subcategories()->skip(1)->first();
+
+        $this->browse(function (Browser $browser) use($categoryTitle,$subcategory1,
+            $subcategory2){
+            $browser->visit('/categories/' . $categoryTitle)
+                ->click('li > a.cursor-pointer')
+                ->assertSee($subcategory1->products()->first()->name)
+                ->assertSee($subcategory1->products()->skip(1)->first()->name)
+                ->assertDontSee($subcategory2->products()->first()->name)
+                ->assertDontSee($subcategory2->products()->skip(1)->first()->name)
+                ->screenshot('subcategoriesFilter-test');
+        });
+    }
+
+    /** @test */
+    public function it_filters_by_brands()
+    {
+        $category = Category::first();
+        $brand1 = $category->brands()->skip(2)->first();
+        $categoryTitle = $category->slug;
+        $brand2 = $category->brands()->skip(3)->first();
+
+        $this->browse(function (Browser $browser) use($categoryTitle,$brand1,
+            $brand2){
+            $browser->visit('/categories/' . $categoryTitle)
+                ->click('ul:nth-of-type(2) > li:nth-of-type(3) > a.cursor-pointer')
+                ->assertPresent('a.font-semibold')
+                ->assertSee($brand1->products()->first()->name)
+                ->assertSee($brand1->products()->skip(1)->first()->name)
+                ->assertDontSee($brand2->products()->first()->name)
+                ->assertDontSee($brand2->products()->skip(1)->first()->name)
+                ->screenshot('brandFilter-test');
+        });
+    }
+
+    /** @test */
+    public function it_filters_by_subcategories_and_brands()
+    {
+        $category = Category::first();
+        $subcategory1 = $category->subcategories()->first();
+        $subcategory2 = $category->subcategories()->skip(1)->first();
+        $brand1 = $category->brands()->skip(2)->first();
+        $brand2 = $category->brands()->skip(3)->first();
+        $categoryTitle = $category->slug;
+
+        $this->browse(function (Browser $browser) use($categoryTitle,$brand1,
+            $brand2, $subcategory1, $subcategory2){
+            $browser->visit('/categories/' . $categoryTitle)
+                ->click('li > a.cursor-pointer')
+                ->click('ul:nth-of-type(2) > li:nth-of-type(3) > a.cursor-pointer')
+                ->assertPresent('a.font-semibold')
+                ->assertSee($subcategory1->products()->where('brand_id', $brand1->id)->first()->name)
+                ->assertSee($subcategory1->products()->where('brand_id', $brand1->id)->skip(1)->first()->name)
+                ->assertDontSee($subcategory2->products()->where('brand_id', $brand2->id)->first()->name)
+                ->assertDontSee($subcategory2->products()->where('brand_id', $brand2->id)->skip(1)->first()->name)
+
+                ->screenshot('categoryBrandFilter-test');
+        });
+    }
 }
