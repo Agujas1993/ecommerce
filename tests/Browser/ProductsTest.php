@@ -43,31 +43,13 @@ class ProductsTest extends DuskTestCase
     {
         $product1 = Category::skip(1)->first()->products()->skip(1)->first();
 
+        $product1->quantity = 5;
+        $product1->save();
+
         $this->browse(function (Browser $browser) use ($product1) {
             $browser->visit('products/' . $product1->id)
                 ->assertButtonDisabled('-')
                 ->assertButtonEnabled('+')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
-                ->click('div.mr-4 > button:nth-of-type(2)')
                 ->click('div.mr-4 > button:nth-of-type(2)')
                 ->click('div.mr-4 > button:nth-of-type(2)')
                 ->click('div.mr-4 > button:nth-of-type(2)')
