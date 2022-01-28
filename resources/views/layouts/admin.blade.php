@@ -19,31 +19,6 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
         <script src="{{ asset('vendor/ckeditor5/build/ckeditor.js') }}"></script>
         <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>
-
-        @push('scripts')
-            <script>
-                Livewire.on('deletePivot', pivot => {
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Livewire.emit('delete', pivot);
-                            Swal.fire(
-                                'Deleted!',
-                                'Your file has been deleted.',
-                                'success'
-                            )
-                        }
-                    })
-                })
-            </script>
-        @endpush
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />
