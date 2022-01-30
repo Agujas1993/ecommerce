@@ -6,12 +6,16 @@ use App\Http\Livewire\AddCartItemColor;
 use App\Http\Livewire\AddCartItemSize;
 use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Livewire\Livewire;
 use Tests\DuskTestCase;
 
 class ProductsTest extends DuskTestCase
 {
+    use RefreshDatabase;
+    use DatabaseMigrations;
+
     /** @test */
     public function the_products_details_are_shown()
     {

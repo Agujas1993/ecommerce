@@ -2,8 +2,10 @@
 
 namespace Tests\Browser;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Subcategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,12 +40,19 @@ class CategoriesTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use($category1, $category2, $category3, $category4, $category5){
             $browser->visit('/')
+                ->pause(100)
                     ->assertSee('Categorías')
+                ->pause(100)
                     ->click('@categorias')
+                ->pause(100)
                 ->assertSee($category1->name)
+                ->pause(100)
                 ->assertSee($category2->name)
+                ->pause(100)
                 ->assertSee($category3->name)
+                ->pause(100)
                 ->assertSee($category4->name)
+                ->pause(100)
                 ->assertSee($category5->name)
                     ->screenshot('categories-test');
         });
@@ -53,45 +62,64 @@ class CategoriesTest extends DuskTestCase
     public function it_shows_the_categories_details()
     {
 
-        $category = Category::first();
-        $categoryTitle = $category->name;
-        $subcategory1 = $category->subcategories()->first();
-        $subcategory2 = $category->subcategories()->skip(1)->first();
-        $subcategory3 = $category->subcategories()->skip(2)->first();
-        $product1 = $category->products()->first();
-        $product2 = $category->products()->skip(1)->first();
-        $product3 = $category->products()->skip(1)->first();
-        $brand1 = $category->brands()->first();
-        $brand2 = $category->brands()->skip(1)->first();
-        $brand3 = $category->brands()->skip(2)->first();
-        $brand4 = $category->brands()->skip(3)->first();
+        $category = $this->createCategory();
+
+        $subcategory1 = Subcategory::factory()->create(['category_id' => 1,
+            'name' => 'Smartwatches',
+            'slug' => Str::slug('Smartwatches'),
+        ]);
+
+        $subcategory2 = Subcategory::factory()->create(['category_id' => 1,
+            'name' => 'Tablets',
+            'slug' => Str::slug('Tablets'),
+        ]);
+
+        $brand1 = $category->brands()->create(['name' => 'LG']);
+        $brand2 = $category->brands()->create(['name' => 'Xiaomi']);
+
+        $product1 = Product::factory()->create([
+            'name' => 'Tablet LG',
+            'slug' => 'tablet-lg',
+            'description' => 'tablet lg 4/64',
+            'subcategory_id' => $subcategory2->id,
+            'brand_id' => $brand1->id,
+            'price' => '262.99',
+            'quantity' => '20',
+            'status' => 2
+        ]);
+        $product2 = Product::factory()->create([
+            'name' => 'Smartwatch Xiaomi',
+            'slug' => 'smartwatch-xiaomi',
+            'description' => 'Smartwatch Xiaomi moderno',
+            'subcategory_id' => $subcategory1->id,
+            'brand_id' => $brand2->id,
+            'price' => '262.99',
+            'quantity' => '20',
+            'status' => 2
+        ]);
+
+        $product1->images()->create(['url' => 'storage/324234324323423.png']);
+        $product2->images()->create(['url' => 'storage/32234234123.png']);
 
 
-        $this->browse(function (Browser $browser) use($categoryTitle,$subcategory1,
-            $subcategory2,$subcategory3, $product1,$product2, $product3,$brand1,
-            $brand2, $brand3, $brand4){
+        $this->browse(function (Browser $browser) use($category,$subcategory1, $subcategory2, $product1,$product2,$brand1, $brand2){
 
             $browser->visit('/')
-                ->assertSee(strtoupper($categoryTitle))
+                ->assertSee(strtoupper($category->name))
                 ->assertSee('Ver más')
                 ->click('.text-orange-500')
-                ->assertSee($categoryTitle)
+                ->assertSee($category->name)
                 ->assertSee('Subcategorías')
                 ->assertSeeIn('aside',ucwords($subcategory1->name))
                 ->assertSeeIn('aside',ucwords($subcategory2->name))
-                ->assertSeeIn('aside',ucwords($subcategory3->name))
                 ->assertSeeIn('aside','Marcas')
                 ->assertSeeIn('aside',ucfirst($brand1->name))
                 ->assertSeeIn('aside',ucfirst($brand2->name))
-                ->assertSeeIn('aside',ucfirst($brand3->name))
-                ->assertSeeIn('aside',ucfirst($brand4->name))
                 ->assertSeeIn('aside','ELIMINAR FILTROS')
                 ->assertSee($product1->name)
                 ->assertSee($product2->name)
-                ->assertSee($product3->name)
                 ->assertSee($product1->price)
                 ->assertSee($product2->price)
-                ->assertSee($product3->price)
                 ->assertSee('€')
                 ->assertPresent('img')
                 ->assertPresent('h1.text-lg')
@@ -135,19 +163,7 @@ class CategoriesTest extends DuskTestCase
         $product3 = $category->first()->products()->skip(2)->first();
         $product4 = $category->first()->products()->skip(3)->first();
         $product5 = $category->first()->products()->skip(4)->first();
-        $product6 = $category->first()->products()->skip(5)->first();
-        $product7 = $category->first()->products()->skip(6)->first();
-
-        $subcategory = $category->subcategories()->first()->id;
-        $brand = $category->brands()->first()->id;
-
-        $product6->status = 1;
-        $product6->save();
-
-        $product7->status = 1;
-        $product7->save();
-
-        /*$product8 = Product::factory()->create([
+        $product6 = Product::factory()->create([
             'name' => 'Xbox',
             'slug' => 'xbox',
             'description' => 'xbox 512GB',
@@ -156,9 +172,8 @@ class CategoriesTest extends DuskTestCase
             'price' => '262.99',
             'quantity' => '20',
             'status' => 2
-        ]);
-
-        $product9 = Product::factory()->create([
+            ]);
+        $product7 = Product::factory()->create([
             'name' => 'Playstation',
             'slug' => 'Playstation',
             'description' => 'Playstation 1TB',
@@ -169,10 +184,14 @@ class CategoriesTest extends DuskTestCase
             'status' => 1
         ]);
 
-        $product8->save();
+        $subcategory = $category->subcategories()->first()->id;
+        $brand = $category->brands()->first()->id;
 
-        $product9->save();
-        */
+        $product6->status = 1;
+        $product6->save();
+
+        $product7->status = 1;
+        $product7->save();
         $category = strtoupper($category->name);
 
         $this->browse(function (Browser $browser) use ($category, $product1, $product2,
