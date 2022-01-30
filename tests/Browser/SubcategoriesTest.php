@@ -3,11 +3,16 @@
 namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 class SubcategoriesTest extends DuskTestCase
 {
+
+    use DatabaseMigrations;
+    use RefreshDatabase;
+
     /** @test */
     public function it_shows_the_subcategories_linked_to_phone_category()
     {

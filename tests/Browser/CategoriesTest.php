@@ -4,33 +4,47 @@ namespace Tests\Browser;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
-use Psy\Util\Str;
 use Tests\DuskTestCase;
+use \Illuminate\Support\Str;
+
 
 class CategoriesTest extends DuskTestCase
 {
 
+    use DatabaseMigrations;
+    use RefreshDatabase;
+
     /** @test */
     public function it_shows_the_categories()
     {
-        $category1 = Category::first()->name;
-        $category2 = Category::skip(1)->first()->name;
-        $category3 = Category::skip(2)->first()->name;
-        $category4 = Category::skip(3)->first()->name;
-        $category5 = Category::skip(4)->first()->name;
+        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
+            'slug' => Str::slug('Celulares y tablets'),
+            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category2 = Category::factory()->create(['name' => 'TV, audio y video',
+            'slug' => Str::slug('TV, audio y video'),
+            'icon' => '<i class="fas fa-tv"></i>']);
+        $category3 = Category::factory()->create(['name' => 'Consola y videojuegos',
+            'slug' => Str::slug('Consola y videojuegos'),
+            'icon' => '<i class="fas fa-gamepad"></i>']);
+        $category4 = Category::factory()->create(['name' => 'Computación',
+            'slug' => Str::slug('Computación'),
+            'icon' => '<i class="fas fa-laptop"></i>']);
+        $category5 = Category::factory()->create(['name' => 'Moda', 'slug' => Str::slug('Moda'),
+            'icon' => '<i class="fas fa-tshirt"></i>']);
 
         $this->browse(function (Browser $browser) use($category1, $category2, $category3, $category4, $category5){
             $browser->visit('/')
                     ->assertSee('Categorías')
                     ->click('@categorias')
-                ->assertSee($category1)
-                ->assertSee($category2)
-                ->assertSee($category3)
-                ->assertSee($category4)
-                ->assertSee($category5)
+                ->assertSee($category1->name)
+                ->assertSee($category2->name)
+                ->assertSee($category3->name)
+                ->assertSee($category4->name)
+                ->assertSee($category5->name)
                     ->screenshot('categories-test');
         });
     }
