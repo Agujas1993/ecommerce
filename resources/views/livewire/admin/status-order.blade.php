@@ -30,7 +30,19 @@
             </div>
         </div>
     </div>
+
     <div class="bg-white rounded-lg shadow-lg px-6 py-4 mb-6">
+        <div>
+            <p class="text-lg font-semibold uppercase">Envío</p>
+            @if($order->envio_type == 1)
+                <p class="text-sm">Los productos deben ser recogidos en tienda</p>
+                <p class="text-sm">Calle Falsa 123</p>
+            @else
+                <p class="text-sm">Los productos serán enviados a:</p>
+                <p class="text-sm">{{ $envio->address }}</p>
+                <p>{{ $envio->department }} - {{ $envio->city }} - {{ $envio->district }}</p>
+            @endif
+        </div>
         <p class="text-gray-700 uppercase"><span class="font-semibold">Número de Orden:</span> {{ $order->id }}</p>
         <form wire:submit.prevent="update">
             <div class="flex space-x-3 mt-2">
