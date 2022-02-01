@@ -49,15 +49,25 @@ class SubcategoriesTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($category1,$category2, $subcategory1, $subcategory2,$hiddenSubcategory1,$hiddenSubcategory2){
             $browser->visit('/')
+                ->pause(100)
                 ->assertSee('Categorías')
+                ->pause(100)
                 ->click('@categorias')
+                ->pause(100)
                 ->assertSee($category1->name)
+                ->pause(100)
                 ->mouseover('ul.bg-white > li:nth-of-type(1) > a')
+                ->pause(100)
                 ->assertSee('Subcategorías')
+                ->pause(100)
                 ->assertSee($subcategory1->name)
+                ->pause(100)
                 ->assertSee($subcategory2->name)
+                ->pause(100)
                 ->assertSee($category2->name)
+                ->pause(100)
                 ->assertDontSee($hiddenSubcategory1->name)
+                ->pause(100)
                 ->assertDontSee($hiddenSubcategory2->name)
                 ->screenshot('subcategory-test');
         });

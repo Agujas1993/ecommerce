@@ -75,11 +75,13 @@ abstract class DuskTestCase extends BaseTestCase
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
     }
 
-    public function createProduct()
+    public function createProduct($name, $price, $status)
     {
-        $this->createCategory();
+        $category = Category::factory()->create(['name' => 'Celulares y tablets',
+            'slug' => Str::slug('Celulares y tablets'),
+            'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::factory()->create(['category_id' => $category->id,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -87,14 +89,14 @@ abstract class DuskTestCase extends BaseTestCase
         $brand = Brand::factory()->create(['name' => 'LG']);
 
         return Product::factory()->create([
-            'name' => 'Tablet LG',
-            'slug' => 'tablet-lg',
-            'description' => 'tablet lg 4/64',
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'description' => $name . 'moderno año 2022',
             'subcategory_id' => $subcategory->id,
             'brand_id' => $brand->id,
-            'price' => '262.99',
+            'price' => $price,
             'quantity' => '20',
-            'status' => 2
+            'status' => $status
         ]);
     }
 }
