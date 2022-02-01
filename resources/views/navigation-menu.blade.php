@@ -16,7 +16,7 @@
                         Productos
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('admin.categories.index') }}" :active="request()->routeIs('admin.categories.index')">
+                    <x-jet-nav-link href="{{ route('admin.categories.index') }}" :active="request()->routeIs('admin.categories.*')">
                         Categorías
                     </x-jet-nav-link>
                 </div>
@@ -145,7 +145,7 @@
             <x-jet-responsive-nav-link href="{{ route('admin.index') }}" :active="request()->routeIs('admin.index')">
                 Productos
             </x-jet-responsive-nav-link>
-            <x-jet-responsive-nav-link href="{{ route('admin.categories.index') }}" :active="request()->routeIs('admin.categories.index')">
+            <x-jet-responsive-nav-link href="{{ route('admin.categories.index') }}" :active="request()->routeIs('admin.categories.*')">
                 Categorías
             </x-jet-responsive-nav-link>
         </div>
