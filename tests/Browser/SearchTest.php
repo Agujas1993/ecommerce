@@ -46,8 +46,10 @@ class SearchTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
-                ->type('search', 'Aspirador')
-                ->assertSee($product->name);
+                ->type('input', 'Aspirador')
+                ->pause(1000)
+                ->assertSeeIn('div.px-4',$product->name)
+                ->screenshot('searchByName-test');
         });
     }
 }

@@ -148,17 +148,19 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(100)
                 ->click('h1.text-lg > a')
                 ->pause(100)
-                ->click('div > select')
+                ->click('select')
                 ->pause(100)
                 ->click('option:nth-of-type(2)')
-                ->click('div.mt-2 > select')
+                ->pause(1000)
+                ->clickAtPoint(300,200)
+                ->click('select:nth-of-type(2)')
                 ->pause(100)
                 ->click('option:nth-of-type(2)')
                 ->pause(100)
                 ->click('div.flex-1 > button')
                 ->pause(100)
                 ->assertSeeIn('span.relative > span.absolute','1')
-                ->screenshot('outStockColorProducts-test');
+                ->screenshot('addingSizeColorProduct-test');
         });
     }
 
@@ -198,9 +200,9 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(100)
                 ->click('div.relative > div > span')
                 ->pause(100)
-                ->assertSeeIn('.rounded-md .ring-1', $product->name)
+                ->assertSeeIn('li.flex', $product->name)
                 ->pause(100)
-                ->assertSeeIn('.rounded-md .ring-1', $product->price)
+                ->assertSeeIn('li.flex', $product->price)
                 ->screenshot('redCircleIncreasesWhenAddingProduct-test');
         });
     }
@@ -337,6 +339,8 @@ class ShoppingCartTest extends DuskTestCase
                 ->click('div > select')
                 ->pause(100)
                 ->click('option:nth-of-type(2)')
+                ->pause(1000)
+                ->releaseMouse()
                 ->click('div.mt-2 > select')
                 ->pause(100)
                 ->click('option:nth-of-type(2)')
@@ -344,7 +348,7 @@ class ShoppingCartTest extends DuskTestCase
                 ->click('div.flex-1 > button')
                 ->pause(100)
                 ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
-                ->screenshot('outStockColorProducts-test');
+                ->screenshot('outStockSizeColorProducts-test');
         });
     }
 }
