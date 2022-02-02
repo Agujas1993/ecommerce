@@ -27,22 +27,22 @@ class SubcategoriesTest extends DuskTestCase
             'slug' => Str::slug('TV, audio y video'),
             'icon' => '<i class="fas fa-tv"></i>']);
 
-        $subcategory1 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory1 = Subcategory::create(['category_id' => 1,
             'name' => 'Smartwatches',
             'slug' => Str::slug('Smartwatches'),
             ]);
 
-        $subcategory2 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory2 = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
 
-        $hiddenSubcategory1 = Subcategory::factory()->create(['category_id' => 2,
+        $hiddenSubcategory1 = Subcategory::create(['category_id' => 2,
             'name' => 'Auriculares',
             'slug' => Str::slug('Auriculares'),
         ]);
 
-        $hiddenSubcategory2 = Subcategory::factory()->create(['category_id' => 2,
+        $hiddenSubcategory2 = Subcategory::create(['category_id' => 2,
             'name' => 'Altavoces',
             'slug' => Str::slug('Altavoces'),
         ]);

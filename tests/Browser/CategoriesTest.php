@@ -63,12 +63,12 @@ class CategoriesTest extends DuskTestCase
     {
         $category = $this->createCategory();
 
-        $subcategory1 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory1 = Subcategory::create(['category_id' => 1,
             'name' => 'Smartwatches',
             'slug' => Str::slug('Smartwatches'),
         ]);
 
-        $subcategory2 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory2 = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -134,7 +134,7 @@ class CategoriesTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -222,7 +222,7 @@ class CategoriesTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -333,12 +333,12 @@ class CategoriesTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory1 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory1 = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
 
-        $subcategory2 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory2 = Subcategory::create(['category_id' => 1,
             'name' => 'Celulares',
             'slug' => Str::slug('Celulares'),
         ]);
@@ -389,7 +389,7 @@ class CategoriesTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -439,12 +439,12 @@ class CategoriesTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory1 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory1 = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
 
-        $subcategory2 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory2 = Subcategory::create(['category_id' => 1,
             'name' => 'Celulares',
             'slug' => Str::slug('Celulares'),
         ]);
@@ -467,7 +467,7 @@ class CategoriesTest extends DuskTestCase
             'slug' => Str::slug('Móvil Xiaomi redmi note 8'),
             'description' => 'Móvil Xiaomi redmi note 8' . 'moderno año 2022',
             'subcategory_id' => $subcategory2->id,
-            'brand_id' => $brand1->id,
+            'brand_id' => $brand2->id,
             'price' => '148.99',
             'quantity' => '20',
             'status' => 2

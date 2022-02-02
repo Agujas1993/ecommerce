@@ -29,7 +29,7 @@ class ProductsTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -70,13 +70,122 @@ class ProductsTest extends DuskTestCase
     }
 
     /** @test */
+    public function the_color_products_details_are_shown()
+    {
+        $category = Category::factory()->create(['name' => 'Celulares y tablets',
+            'slug' => Str::slug('Celulares y tablets'),
+            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+
+        $subcategory = Subcategory::create(['category_id' => 1,
+            'name' => 'Tablets',
+            'slug' => Str::slug('Tablets'),
+            'color' => true
+        ]);
+
+        $brand = $category->brands()->create(['name' => 'LG']);
+
+        $product = Product::factory()->create([
+            'name' => 'Tablet LG2080',
+            'slug' => Str::slug('Tablet LG2080'),
+            'description' => 'Tablet LG2080' . 'moderno año 2022',
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'price' => '118.99',
+            'quantity' => '1',
+            'status' => 2
+        ]);
+
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        Color::create(['name' => 'Blanco']);
+
+        $product->colors()->attach([1 => ['quantity' => 1]]);
+
+        $this->browse(function (Browser $browser) use($product, $brand) {
+            $browser->visit('products/' . $product->id)
+                ->assertSee($product->name)
+                ->assertSee('Marca: ' . ucfirst($brand->name))
+                ->assertPresent('a.underline')
+                ->assertSee($product->price)
+                ->assertPresent('p.text-2xl')
+                ->assertSee('Stock disponible: ' . $product->quantity)
+                ->assertPresent('span.font-semibold ')
+                ->assertButtonDisabled('+')
+                ->assertButtonDisabled('-')
+                ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
+                ->assertSee($product->description)
+                ->assertPresent('div.flexslider')
+                ->assertPresent('img.flex-active')
+                ->screenshot('colorProductDetails-test');
+        });
+    }
+
+    /** @test */
+    public function the_size_color_products_details_are_shown()
+    {
+        $category = Category::factory()->create(['name' => 'Celulares y tablets',
+            'slug' => Str::slug('Celulares y tablets'),
+            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+
+        $subcategory = Subcategory::create(['category_id' => 1,
+            'name' => 'Tablets',
+            'slug' => Str::slug('Tablets'),
+            'color' => true, 'size' => true
+        ]);
+
+        $brand = $category->brands()->create(['name' => 'LG']);
+
+        $product = Product::factory()->create([
+            'name' => 'Tablet LG2080',
+            'slug' => Str::slug('Tablet LG2080'),
+            'description' => 'Tablet LG2080' . 'moderno año 2022',
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'price' => '118.99',
+            'quantity' => '1',
+            'status' => 2
+        ]);
+
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        Color::create(['name' => 'Blanco']);
+
+        $product->colors()->attach([1 => ['quantity' => 1]]);
+
+        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
+        $size->colors()
+            ->attach([
+                1 => ['quantity' => 1]]);
+
+        $this->browse(function (Browser $browser) use($product, $brand) {
+            $browser->visit('products/' . $product->id)
+                ->assertSee($product->name)
+                ->assertSee('Marca: ' . ucfirst($brand->name))
+                ->assertPresent('a.underline')
+                ->assertSee($product->price)
+                ->assertPresent('p.text-2xl')
+                ->assertSee('Stock disponible: ' . $product->quantity)
+                ->assertPresent('span.font-semibold ')
+                ->assertButtonDisabled('+')
+                ->assertButtonDisabled('-')
+                ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
+                ->assertSee($product->description)
+                ->assertPresent('div.flexslider')
+                ->assertPresent('img.flex-active')
+                ->screenshot('sizeColorProductDetails-test');
+        });
+    }
+
+    /** @test */
     public function the_button_limits_are_ok()
     {
         $category = Category::factory()->create(['name' => 'Celulares y tablets',
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -121,7 +230,7 @@ class ProductsTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
         ]);
@@ -167,7 +276,7 @@ class ProductsTest extends DuskTestCase
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
 
-        $subcategory1 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory1 = Subcategory::create(['category_id' => 1,
             'name' => 'Tablets',
             'slug' => Str::slug('Tablets'),
             'color' => true
@@ -208,7 +317,7 @@ class ProductsTest extends DuskTestCase
         $category2 = Category::factory()->create(['name' => 'Moda', 'slug' => Str::slug('Moda'),
             'icon' => '<i class="fas fa-tshirt"></i>']);
 
-        $subcategory2 = Subcategory::factory()->create(['category_id' => 1,
+        $subcategory2 = Subcategory::create(['category_id' => 1,
             'name' => 'Hombres',
             'slug' => Str::slug('Hombres'),
             'color' => true, 'size' => true
