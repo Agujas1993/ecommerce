@@ -1,4 +1,5 @@
 <x-app-layout>
+    {{--<x-alert type="success" position="top-right">Esta es mi alerta</x-alert>--}}
     <div class="container-menu py-8">
         @foreach($categories as $category)
             <section class="mb-6">
