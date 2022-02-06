@@ -8,6 +8,7 @@ use App\Http\Livewire\Navigation;
 use App\Http\Livewire\Search;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
@@ -17,6 +18,7 @@ class NavTest extends TestCase
 {
 
     use RefreshDatabase;
+    use DatabaseMigrations;
 
     /** @test */
     public function it_loads_the_nav_bar()

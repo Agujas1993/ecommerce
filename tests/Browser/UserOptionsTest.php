@@ -2,12 +2,9 @@
 
 namespace Tests\Browser;
 
-use App\Models\Category;
-use App\Models\Subcategory;
-use App\Models\User;
+
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
@@ -39,11 +36,7 @@ class UserOptionsTest extends DuskTestCase
     public function it_shows_the_logout_and_profile_options()
     {
         $this->createCategory();
-        User::factory()->create([
-            'name' => 'Samuel Garcia',
-            'email' => 'samuel@test.com',
-            'password' => bcrypt('123'),
-        ]);
+        $this->createUser();
 
         $this->browse(function (Browser $browser){
             $browser->visit('/login')

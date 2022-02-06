@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Subcategory;
+use App\Models\User;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -73,6 +74,15 @@ abstract class DuskTestCase extends BaseTestCase
         return Category::factory()->create(['name' => 'Celulares y tablets',
             'slug' => Str::slug('Celulares y tablets'),
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
+    }
+
+    public function createUser()
+    {
+        return User::factory()->create([
+            'name' => 'Samuel Garcia',
+            'email' => 'samuel@test.com',
+            'password' => bcrypt('123'),
+        ]);
     }
 
     public function createProduct($name, $price, $status)

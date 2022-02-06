@@ -8,7 +8,6 @@ use App\Models\Department;
 use App\Models\District;
 use App\Models\Product;
 use App\Models\Subcategory;
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -98,11 +97,7 @@ class OrderTest extends DuskTestCase
 
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
-        User::factory()->create([
-            'name' => 'Samuel Garcia',
-            'email' => 'samuel@test.com',
-            'password' => bcrypt('123'),
-        ]);
+        $this->createUser();
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -162,11 +157,7 @@ class OrderTest extends DuskTestCase
 
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
-        User::factory()->create([
-            'name' => 'Samuel Garcia',
-            'email' => 'samuel@test.com',
-            'password' => bcrypt('123'),
-        ]);
+        $this->createUser();
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -229,11 +220,7 @@ class OrderTest extends DuskTestCase
 
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
-        User::factory()->create([
-            'name' => 'Samuel Garcia',
-            'email' => 'samuel@test.com',
-            'password' => bcrypt('123'),
-        ]);
+        $this->createUser();
 
         $department = Department::factory()->create(['name' => 'Murcia']);
         $city = City::factory()->create(['name' => 'Alhama', 'cost' => 10, 'department_id' => $department->id]);
