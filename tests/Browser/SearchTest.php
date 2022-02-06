@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Spatie\Permission\Models\Role;
 
 class SearchTest extends DuskTestCase
 {
@@ -81,6 +82,8 @@ class SearchTest extends DuskTestCase
 
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
+        Role::create(['name' => 'admin']);
+
         User::factory()->create([
             'name' => 'Samuel Garcia',
             'email' => 'samuel@test.com',
@@ -96,9 +99,10 @@ class SearchTest extends DuskTestCase
                 ->type('password', '123')
                 ->pause(100)
                 ->press('INICIAR SESIÓN')
-                ->type('input', 'Aspirador')
                 ->pause(1000)
-                ->assertSeeIn('table.min-w-full',$product->name)
+                ->type('input.border-gray-300', 'Aspirador')
+                ->pause(1000)
+                ->assertSeeIn('tbody',$product->name)
                 ->screenshot('searchByNameAdmin-test');
         });
     }

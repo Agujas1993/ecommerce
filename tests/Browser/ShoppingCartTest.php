@@ -141,8 +141,6 @@ class ShoppingCartTest extends DuskTestCase
         $product->colors()->attach([1 => ['quantity' => 1]]);
 
         $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
-        $product->sizes()->create(['name' => 'XL']);
-
         $size->colors()
             ->attach([
                 1 => ['quantity' => 1],
@@ -155,11 +153,11 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(100)
                 ->click('div > select')
                 ->pause(100)
-                ->select('select', 'XL')
+                ->click('div > select > option:nth-of-type(2)')
                 ->pause(1000)
-                ->select('.mt-2 > select', 'Blanco')
+                ->click('div.mt-2 > select')
                 ->pause(100)
-                ->click('option:nth-of-type(2)')
+                ->click('div.mt-2 > select > option:nth-of-type(2)')
                 ->pause(100)
                 ->click('div.flex-1 > button')
                 ->pause(100)
@@ -342,12 +340,11 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(100)
                 ->click('div > select')
                 ->pause(100)
-                ->click('option:nth-of-type(2)')
+                ->click('div > select > option:nth-of-type(2)')
                 ->pause(1000)
-                ->releaseMouse()
                 ->click('div.mt-2 > select')
                 ->pause(100)
-                ->click('option:nth-of-type(2)')
+                ->click('div.mt-2 > select > option:nth-of-type(2)')
                 ->pause(100)
                 ->click('div.flex-1 > button')
                 ->pause(100)
