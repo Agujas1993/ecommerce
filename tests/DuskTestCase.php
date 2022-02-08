@@ -13,7 +13,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Illuminate\Support\Str;
 use Laravel\Dusk\TestCase as BaseTestCase;
-
+use Illuminate\Database\Eloquent\Factories\Factory;
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
@@ -138,6 +138,13 @@ abstract class DuskTestCase extends BaseTestCase
             'quantity' => '20',
             'status' => 2
         ]);
+    }
+
+    public function createProducts()
+    {
+        return Product::factory(16)->create()->each(function (Product $product) {
+            Image::factory(1)->create(['imageable_id' => $product->id, 'imageable_type' => Product::class]);
+        });
     }
 
     public function createColorProduct()

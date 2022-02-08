@@ -40,6 +40,8 @@ class SearchTest extends DuskTestCase
         $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
+        $this->createProducts();
+
         Role::create(['name' => 'admin']);
 
         User::factory()->create([
