@@ -7,10 +7,8 @@ use App\Http\Livewire\DropdownCart;
 use App\Http\Livewire\Navigation;
 use App\Http\Livewire\Search;
 use App\Models\Category;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -35,6 +33,7 @@ class NavTest extends TestCase
         Livewire::test(Navigation::class)->assertStatus(200)
         ->assertSee('Categorías')
         ->assertViewHas('categories');
+
     }
 
     /** @test */
