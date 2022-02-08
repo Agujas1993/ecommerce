@@ -23,28 +23,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function the_red_circle_of_the_cart_increases_when_adding_a_product()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
@@ -169,28 +148,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_shows_the_products_added_to_cart()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
@@ -356,29 +314,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_shows_the_products_in_the_cart_view()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
@@ -404,29 +340,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_calculates_the_total_when_increasing_the_quantity_in_the_cart_view()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
@@ -452,29 +366,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_is_possible_to_flush_the_shopping_cart()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
@@ -502,28 +394,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_is_possible_to_remove_a_product_from_the_shopping_cart()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
 
@@ -552,36 +423,11 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_saves_the_shopping_cart_when_user_logs_out()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
 
-        User::factory()->create([
-            'name' => 'Samuel Garcia',
-            'email' => 'samuel@test.com',
-            'password' => bcrypt('123'),
-        ]);
+        $this->createUser();
 
         $this->browse(function (Browser $browser) use($product){
             $browser->visit('/login')

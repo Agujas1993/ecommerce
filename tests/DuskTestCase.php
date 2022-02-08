@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\User;
@@ -76,6 +77,41 @@ abstract class DuskTestCase extends BaseTestCase
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
     }
 
+    public function createSubcategory()
+    {
+        return Subcategory::create([
+            'category_id' => 1,'name' => 'Celulares y smartphones',
+            'slug' => Str::slug('Celulares y smartphones'),
+                ]
+        );
+    }
+
+    public function createColorSubcategory()
+    {
+        return Subcategory::create([
+                'category_id' => 1,'name' => 'Celulares y smartphones',
+                'slug' => Str::slug('Celulares y smartphones'),
+                'color' => true
+            ]
+        );
+    }
+
+    public function createColorSizeSubcategory()
+    {
+        return Subcategory::create([
+                'category_id' => 1,'name' => 'Celulares y smartphones',
+                'slug' => Str::slug('Celulares y smartphones'),
+                'color' => true, 'size'=> true
+            ]
+        );
+    }
+
+    public function createBrand()
+    {
+     $category = $this->createCategory();
+        return $category->brands()->create(['name' => 'LG']);
+    }
+
     public function createUser()
     {
         return User::factory()->create([
@@ -85,28 +121,60 @@ abstract class DuskTestCase extends BaseTestCase
         ]);
     }
 
-    public function createProduct($name, $price, $status)
+    public function createProduct()
     {
-        $category = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category = $this->createCategory();
 
-        $subcategory = Subcategory::factory()->create(['category_id' => $category->id,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory = $this->createSubcategory();
 
-        $brand = Brand::factory()->create(['name' => 'LG']);
-
+        $brand = $category->brands()->create(['name' => 'LG']);
         return Product::factory()->create([
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => $name . 'moderno año 2022',
+            'name' => 'Tablet LG2080',
+            'slug' => Str::slug('Tablet LG2080'),
+            'description' => 'Tablet LG2080' . 'moderno año 2022',
             'subcategory_id' => $subcategory->id,
             'brand_id' => $brand->id,
-            'price' => $price,
+            'price' => '118.99',
             'quantity' => '20',
-            'status' => $status
+            'status' => 2
+        ]);
+    }
+
+    public function createColorProduct()
+    {
+        $category = $this->createCategory();
+
+        $subcategory = $this->createColorSubcategory();
+
+        $brand = $category->brands()->create(['name' => 'LG']);
+        return Product::factory()->create([
+            'name' => 'Tablet LG2080',
+            'slug' => Str::slug('Tablet LG2080'),
+            'description' => 'Tablet LG2080' . 'moderno año 2022',
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'price' => '118.99',
+            'quantity' => '20',
+            'status' => 2
+        ]);
+    }
+
+    public function createColorSizeProduct()
+    {
+        $category = $this->createCategory();
+
+        $subcategory = $this->createColorSizeSubcategory();
+
+        $brand = $category->brands()->create(['name' => 'LG']);
+        return Product::factory()->create([
+            'name' => 'Tablet LG2080',
+            'slug' => Str::slug('Tablet LG2080'),
+            'description' => 'Tablet LG2080' . 'moderno año 2022',
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'price' => '118.99',
+            'quantity' => '20',
+            'status' => 2
         ]);
     }
 }

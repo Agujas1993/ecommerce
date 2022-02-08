@@ -6,8 +6,10 @@ use App\Models\Category;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\District;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subcategory;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -22,29 +24,7 @@ class OrderTest extends DuskTestCase
     /** @test */
     public function only_a_logged_user_can_create_an_order()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
@@ -72,29 +52,7 @@ class OrderTest extends DuskTestCase
     /** @test */
     public function it_shows_the_hidden_form_when_shipping_type_is_2()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->createUser();
@@ -132,29 +90,7 @@ class OrderTest extends DuskTestCase
     /** @test */
     public function it_creates_the_order_and_destroys_shopping_cart()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->createUser();
@@ -195,31 +131,8 @@ class OrderTest extends DuskTestCase
     /** @test */
     public function the_selects_load_correctly()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-
+        $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
-
         $this->createUser();
 
         $department = Department::factory()->create(['name' => 'Murcia']);
@@ -264,6 +177,50 @@ class OrderTest extends DuskTestCase
                 ->click('div.px-6 > div:nth-of-type(4) > select.form-control > option:nth-of-type(2)')
                 ->assertSee($district->name)
                 ->screenshot('selectsLoadCorrectly-test');
+        });
+    }
+
+    /** @test */
+    public function my_orders_work_correctly()
+    {
+
+        $this->createUser();
+
+        $product = $this->createProduct();
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        $order = new Order();
+        $order->user_id = '1';
+        $order->contact = 'Samuel';
+        $order->phone = '42343423234';
+        $order->envio_type = '2';
+        $order->shipping_cost = 0;
+        $order->total = '40';
+
+        $order->content = $product;
+        $order->save();
+
+        $this->browse(function (Browser $browser) use ($order){
+            $browser->visit('/login')
+                ->pause(100)
+                ->type('email', 'samuel@test.com')
+                ->pause(100)
+                ->type('password', '123')
+                ->pause(100)
+                ->press('INICIAR SESIÓN')
+                ->pause(100)
+                ->click('.rounded-full .object-cover')
+                ->pause(100)
+                ->click('.rounded-md .ring-1 > a:nth-of-type(2)')
+                ->pause(100)
+                ->assertPathIs('/orders')
+                ->assertSee('PENDIENTE')
+                ->assertSee('RECIBIDO')
+                ->assertSee('ENVIADO')
+                ->assertSee('ENTREGADO')
+                ->assertSee('ANULADO')
+                ->assertSee($order->id)
+                ->screenshot('myOrders-test');
         });
     }
 }
