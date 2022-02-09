@@ -65,22 +65,11 @@ class UserOptionsTest extends DuskTestCase
     {
 
         $this->createUser();
-        $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        $order = new Order();
-        $order->user_id = '1';
-        $order->contact = 'Samuel';
-        $order->phone = '42343423234';
-        $order->envio_type = '2';
-        $order->shipping_cost = 0;
-        $order->total = '40';
-
-        $order->content = $product;
-        $order->save();
-
+        $this->createOrder();
         $this->browse(function (Browser $browser){
             $browser->visit('/orders')
+                ->pause(100)
+                ->assertPathIs('/login')
                 ->type('email', 'samuel@test.com')
                 ->pause(100)
                 ->type('password', '123')
@@ -88,6 +77,7 @@ class UserOptionsTest extends DuskTestCase
                 ->press('INICIAR SESIÓN')
                 ->pause(100)
                 ->assertPathIs('/orders')
+                ->assertSee('Pedidos recientes')
                 ->screenshot('needAuthentication-test');
         });
     }
@@ -96,25 +86,13 @@ class UserOptionsTest extends DuskTestCase
     public function an_authenticated_user_cant_access_other_authenticated_user_orders()
     {
         $this->createUser();
-        $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $this->createOrder();
 
         User::factory()->create([
             'name' => 'Pepe',
             'email' => 'pepe@test.com',
             'password' => bcrypt('123'),
         ]);
-
-        $order = new Order();
-        $order->user_id = '1';
-        $order->contact = 'Samuel';
-        $order->phone = '42343423234';
-        $order->envio_type = '2';
-        $order->shipping_cost = 0;
-        $order->total = '40';
-
-        $order->content = $product;
-        $order->save();
 
         $this->browse(function (Browser $browser){
             $browser->visit('/orders/1')
@@ -128,7 +106,7 @@ class UserOptionsTest extends DuskTestCase
                 ->assertTitle('Prohibido')
                 ->assertSeeIn('div.px-4', '403')
                 ->assertSeeIn('div.ml-4','ESTA ACCIÓN NO ESTÁ AUTORIZADA')
-                ->screenshot('needAuthentication-test');
+                ->screenshot('cannotAccessToOthersUsersOrders-test');
         });
     }
 

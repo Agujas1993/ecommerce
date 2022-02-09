@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Models\Category;
 use App\Models\Image;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\User;
@@ -20,6 +21,23 @@ trait TestHelpers
     protected function defaultData()
     {
         return $this->defaultData;
+    }
+
+    public function createOrder()
+    {
+        $product = $this->createProduct();
+
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $order = new Order();
+        $order->user_id = '1';
+        $order->contact = 'Samuel';
+        $order->phone = '42343423234';
+        $order->envio_type = '2';
+        $order->shipping_cost = 0;
+        $order->total = '40';
+
+        $order->content = $product;
+        $order->save();
     }
 
     public function createCategory()
