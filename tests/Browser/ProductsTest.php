@@ -16,11 +16,13 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Livewire\Livewire;
 use Tests\DuskTestCase;
+use Tests\TestHelpers;
 
 class ProductsTest extends DuskTestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
+    use TestHelpers;
 
     /** @test */
     public function the_products_details_are_shown()
@@ -402,6 +404,7 @@ class ProductsTest extends DuskTestCase
                 ->click('div.mr-4 > button:nth-of-type(2)')
                 ->press('AGREGAR AL CARRITO')
                 ->assertSeeIn('div.items-center > div > p.text-gray-700 > span','Stock disponible:')
+                ->pause(100)
                 ->assertSee(($product->quantity-2))
                 ->screenshot('stockColorSizeProductChanges-test');
         });

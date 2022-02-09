@@ -12,12 +12,14 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Spatie\Permission\Models\Role;
+use Tests\TestHelpers;
 
 class SearchTest extends DuskTestCase
 {
 
     use DatabaseMigrations;
     use RefreshDatabase;
+    use TestHelpers;
 
     /** @test */
     public function it_searchs_by_product_name()
@@ -40,7 +42,7 @@ class SearchTest extends DuskTestCase
         $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
-        $this->createProducts();
+        $this->createProducts(16);
 
         Role::create(['name' => 'admin']);
 

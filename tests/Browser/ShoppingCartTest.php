@@ -14,11 +14,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Tests\TestHelpers;
 
 class ShoppingCartTest extends DuskTestCase
 {
     use DatabaseMigrations;
     use RefreshDatabase;
+    use TestHelpers;
 
     /** @test */
     public function the_red_circle_of_the_cart_increases_when_adding_a_product()

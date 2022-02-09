@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use \Illuminate\Support\Str;
+use Tests\TestHelpers;
 
 
 class CategoriesTest extends DuskTestCase
@@ -19,6 +20,7 @@ class CategoriesTest extends DuskTestCase
 
     use DatabaseMigrations;
     use RefreshDatabase;
+    use TestHelpers;
 
     /** @test */
     public function it_shows_the_categories()
@@ -199,8 +201,6 @@ class CategoriesTest extends DuskTestCase
         $product5->images()->create(['url' => 'storage/324234324323423.png']);
 
         $categoryTitle = strtoupper($category->name);
-
-
 
         $this->browse(function (Browser $browser) use ($categoryTitle, $product1, $product2, $product3, $product4, $product5) {
             $browser->visit('/')

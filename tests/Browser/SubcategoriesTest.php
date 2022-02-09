@@ -9,12 +9,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Tests\TestHelpers;
 
 class SubcategoriesTest extends DuskTestCase
 {
 
     use DatabaseMigrations;
     use RefreshDatabase;
+    use TestHelpers;
 
     /** @test */
     public function it_shows_the_subcategories_linked_to_a_category()

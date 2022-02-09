@@ -43,9 +43,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('orders/{order}/payment', PaymentOrder::class)->name('orders.payment');
 });
 
-Route::get('prueba', function () {
-    return Order::where('status', 1)->where('created_at','<',now()->subMinutes(10))->get();
-});
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
