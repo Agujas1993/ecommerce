@@ -2,16 +2,8 @@
 
 namespace Tests\Browser;
 
-use App\Models\Category;
-use App\Models\Color;
-use App\Models\Product;
-use App\Models\Size;
-use App\Models\Subcategory;
-use App\Models\User;
-use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\TestHelpers;
@@ -25,54 +17,26 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function the_red_circle_of_the_cart_increases_when_adding_a_product()
     {
-        $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $this->createProduct();
 
-        $this->browse(function (Browser $browser) use ($product) {
+        $this->browse(function (Browser $browser){
             $browser->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
                 ->pause(100)
                 ->click('div.flex-1 > button')
                 ->pause(100)
-                    ->assertSeeIn('span.relative > span.absolute','1')
-            ->screenshot('redCircleIncreasesWhenAddingProduct-test');
+                ->assertSeeIn('span.relative > span.absolute','1')
+                ->screenshot('redCircleIncreasesWhenAddingProduct-test');
         });
     }
 
     /** @test */
     public function it_is_possible_to_add_a_color_product()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $this->createColorProduct();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-            'color' => true
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '1',
-            'status' => 2
-        ]);
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Blanco']);
-
-        $product->colors()->attach([1 => ['quantity' => 1]]);
-
-        $this->browse(function (Browser $browser) use ($product) {
+        $this->browse(function (Browser $browser){
             $browser->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
@@ -91,43 +55,9 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_is_possible_to_add_a_size_color_product()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $this->createColorSizeProduct();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-            'color' => true,  'size' => true
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '2',
-            'status' => 2
-        ]);
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Blanco']);
-        Color::create(['name' => 'Negro']);
-
-        $product->colors()->attach([1 => ['quantity' => 1]]);
-
-        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
-        $size->colors()
-            ->attach([
-                1 => ['quantity' => 1],
-                2 => ['quantity' => 1]]);
-
-        $this->browse(function (Browser $browser) use ($product) {
+        $this->browse(function (Browser $browser) {
             $browser->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
@@ -151,7 +81,6 @@ class ShoppingCartTest extends DuskTestCase
     public function it_shows_the_products_added_to_cart()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -172,75 +101,27 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_is_not_possible_to_add_products_that_are_out_of_stock()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $product = $this->createProduct();
+        $product->quantity = 0;
+        $product->save();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '1',
-            'status' => 2
-        ]);
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        $this->browse(function (Browser $browser) use ($product) {
+        $this->browse(function (Browser $browser){
             $browser->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
                 ->pause(100)
-                ->click('div.flex-1 > button')
-                ->pause(100)
                 ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
-                ->screenshot('showCartProducts-test');
+                ->screenshot('notPossibleAddProductsWhenOutOfStock-test');
         });
     }
 
     /** @test */
     public function it_is_not_possible_to_add_color_products_that_are_out_of_stock()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $product = $this->createColorProduct();
+        $product->colors()->update(['quantity' => 0]);
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-            'color' => true
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '1',
-            'status' => 2
-        ]);
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Blanco']);
-
-        $product->colors()->attach([1 => ['quantity' => 1]]);
-
-        $this->browse(function (Browser $browser) use ($product) {
+        $this->browse(function (Browser $browser){
             $browser->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
@@ -248,8 +129,6 @@ class ShoppingCartTest extends DuskTestCase
                 ->click('select.form-control')
                 ->pause(100)
                 ->click('option:nth-of-type(2)')
-                ->pause(100)
-                ->click('div.flex-1 > button')
                 ->pause(100)
                 ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
                 ->screenshot('outStockColorProducts-test');
@@ -259,41 +138,9 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_is_not_possible_to_add_size_color_products_that_are_out_of_stock()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $this->createOutStockColorSizeProduct();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-            'color' => true,  'size' => true
-        ]);
-
-        $brand = $category1->brands()->create(['name' => 'LG']);
-
-        $product = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '1',
-            'status' => 2
-        ]);
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Blanco']);
-
-        $product->colors()->attach([1 => ['quantity' => 1]]);
-
-        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
-        $size->colors()
-            ->attach([
-                1 => ['quantity' => 1]]);
-
-        $this->browse(function (Browser $browser) use ($product) {
+        $this->browse(function (Browser $browser){
             $browser->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
@@ -306,8 +153,6 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(100)
                 ->click('div.mt-2 > select > option:nth-of-type(2)')
                 ->pause(100)
-                ->click('div.flex-1 > button')
-                ->pause(100)
                 ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
                 ->screenshot('outStockSizeColorProducts-test');
         });
@@ -317,7 +162,6 @@ class ShoppingCartTest extends DuskTestCase
     public function it_shows_the_products_in_the_cart_view()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -343,7 +187,6 @@ class ShoppingCartTest extends DuskTestCase
     public function it_calculates_the_total_when_increasing_the_quantity_in_the_cart_view()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -369,7 +212,6 @@ class ShoppingCartTest extends DuskTestCase
     public function it_is_possible_to_flush_the_shopping_cart()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -397,8 +239,6 @@ class ShoppingCartTest extends DuskTestCase
     public function it_is_possible_to_remove_a_product_from_the_shopping_cart()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -426,19 +266,11 @@ class ShoppingCartTest extends DuskTestCase
     public function it_saves_the_shopping_cart_when_user_logs_out()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $user = $this->createUser();
 
-
-        $this->createUser();
-
-        $this->browse(function (Browser $browser) use($product){
-            $browser->visit('/login')
-                ->pause(100)
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
+        $this->browse(function (Browser $browser) use($product, $user){
+            $browser->loginAs($user->id)
+                ->visit('/dashboard')
                 ->pause(100)
                 ->click('a.mx-6')
                 ->pause(100)
@@ -450,14 +282,8 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(100)
                 ->assertSeeIn('li.flex', $product->name)
                 ->logout()
-                ->visit('/login')
-                ->pause(100)
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
-                ->pause(100)
+                ->loginAs($user->id)
+                ->visit('/')
                 ->click('div.relative > div > span')
                 ->pause(100)
                 ->assertSeeIn('li.flex', $product->name)

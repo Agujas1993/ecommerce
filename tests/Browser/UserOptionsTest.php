@@ -2,8 +2,6 @@
 
 namespace Tests\Browser;
 
-
-use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,10 +27,10 @@ class UserOptionsTest extends DuskTestCase
                 ->pause(100)
                 ->click('.fa-user-circle')
                 ->pause(100)
-                    ->assertSeeIn('.rounded-md .ring-1','Login')
+                ->assertSeeIn('.rounded-md .ring-1','Login')
                 ->pause(100)
-                    ->assertSeeIn('.rounded-md .ring-1','Registro')
-                    ->screenshot('not-logged-test');
+                ->assertSeeIn('.rounded-md .ring-1','Registro')
+                ->screenshot('not-logged-test');
         });
     }
 
@@ -40,17 +38,11 @@ class UserOptionsTest extends DuskTestCase
     public function it_shows_the_logout_and_profile_options()
     {
         $this->createCategory();
-        $this->createUser();
+        $user = $this->createUser();
 
-        $this->browse(function (Browser $browser){
-            $browser->visit('/login')
-                ->pause(100)
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
-                ->pause(100)
+        $this->browse(function (Browser $browser) use($user){
+            $browser->loginAs($user->id)
+                ->visit('/login')
                 ->click('.rounded-full .object-cover')
                 ->pause(100)
                 ->assertSeeIn('.rounded-md .ring-1','Perfil')
@@ -64,18 +56,16 @@ class UserOptionsTest extends DuskTestCase
     public function the_unauthenticated_user_cant_access_to_authenticate_necessary_routes()
     {
 
-        $this->createUser();
+        $user = $this->createUser();
         $this->createOrder();
-        $this->browse(function (Browser $browser){
+
+        $this->browse(function (Browser $browser) use ($user){
             $browser->visit('/orders')
                 ->pause(100)
                 ->assertPathIs('/login')
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
-                ->pause(100)
+                ->loginAs($user->id)
+                ->visit('/orders')
+                ->pause(1000)
                 ->assertPathIs('/orders')
                 ->assertSee('Pedidos recientes')
                 ->screenshot('needAuthentication-test');
@@ -88,19 +78,15 @@ class UserOptionsTest extends DuskTestCase
         $this->createUser();
         $this->createOrder();
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Pepe',
             'email' => 'pepe@test.com',
             'password' => bcrypt('123'),
         ]);
 
-        $this->browse(function (Browser $browser){
-            $browser->visit('/orders/1')
-                ->type('email', 'pepe@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
+        $this->browse(function (Browser $browser) use ($user){
+            $browser->loginAs($user->id)
+                ->visit('/orders/1')
                 ->pause(100)
                 ->assertPathIs('/orders/1')
                 ->assertTitle('Prohibido')

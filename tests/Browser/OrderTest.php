@@ -2,17 +2,12 @@
 
 namespace Tests\Browser;
 
-use App\Models\Category;
+
 use App\Models\City;
 use App\Models\Department;
 use App\Models\District;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Subcategory;
-use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\TestHelpers;
@@ -27,7 +22,6 @@ class OrderTest extends DuskTestCase
     public function only_a_logged_user_can_create_an_order()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')
@@ -55,12 +49,12 @@ class OrderTest extends DuskTestCase
     public function it_shows_the_hidden_form_when_shipping_type_is_2()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
-        $this->createUser();
+        $user = $this->createUser();
 
-        $this->browse(function (Browser $browser) use ($product) {
-            $browser->visit('/')
+        $this->browse(function (Browser $browser) use ($product, $user) {
+            $browser->loginAs($user->id)
+                ->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
                 ->pause(100)
@@ -72,11 +66,6 @@ class OrderTest extends DuskTestCase
                 ->assertSee($product->name)
                 ->pause(100)
                 ->click('a.bg-red-600')
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
                 ->pause(1000)
                 ->click('div.order-2 > div:nth-of-type(2) > div > label > input')
                 ->assertPresent('div.hidden')
@@ -93,12 +82,11 @@ class OrderTest extends DuskTestCase
     public function it_creates_the_order_and_destroys_shopping_cart()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
+        $user = $this->createUser();
 
-        $this->createUser();
-
-        $this->browse(function (Browser $browser) use ($product) {
-            $browser->visit('/')
+        $this->browse(function (Browser $browser) use ($product, $user) {
+            $browser->loginAs($user->id)
+                ->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
                 ->pause(100)
@@ -110,11 +98,6 @@ class OrderTest extends DuskTestCase
                 ->assertSee($product->name)
                 ->pause(100)
                 ->click('a.bg-red-600')
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
                 ->pause(1000)
                 ->type('div.bg-white > div.mb-4 > input', 'samuel')
                 ->pause(100)
@@ -134,15 +117,15 @@ class OrderTest extends DuskTestCase
     public function the_selects_load_correctly()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-        $this->createUser();
+        $user = $this->createUser();
 
         $department = Department::factory()->create(['name' => 'Murcia']);
         $city = City::factory()->create(['name' => 'Alhama', 'cost' => 10, 'department_id' => $department->id]);
         $district = District::factory()->create(['name' => 'Barrio Perdido', 'city_id' => $city->id]);
 
-        $this->browse(function (Browser $browser) use ($product, $department, $city, $district) {
-            $browser->visit('/')
+        $this->browse(function (Browser $browser) use ($product, $department, $city, $district, $user) {
+            $browser->loginAs($user->id)
+                ->visit('/')
                 ->pause(100)
                 ->click('h1.text-lg > a')
                 ->pause(100)
@@ -154,11 +137,6 @@ class OrderTest extends DuskTestCase
                 ->assertSee($product->name)
                 ->pause(100)
                 ->click('a.bg-red-600')
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
                 ->pause(1000)
                 ->click('div.order-2 > div:nth-of-type(2) > div > label > input')
                 ->pause(1000)
@@ -185,31 +163,14 @@ class OrderTest extends DuskTestCase
     /** @test */
     public function my_orders_work_correctly()
     {
+        $user = $this->createUser();
 
-        $this->createUser();
+        $this->createProduct();
+        $order = $this->createOrder();
 
-        $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        $order = new Order();
-        $order->user_id = '1';
-        $order->contact = 'Samuel';
-        $order->phone = '42343423234';
-        $order->envio_type = '2';
-        $order->shipping_cost = 0;
-        $order->total = '40';
-
-        $order->content = $product;
-        $order->save();
-
-        $this->browse(function (Browser $browser) use ($order){
-            $browser->visit('/login')
-                ->pause(100)
-                ->type('email', 'samuel@test.com')
-                ->pause(100)
-                ->type('password', '123')
-                ->pause(100)
-                ->press('INICIAR SESIÓN')
+        $this->browse(function (Browser $browser) use ($order, $user){
+            $browser->loginAs($user->id)
+                ->visit('/')
                 ->pause(100)
                 ->click('.rounded-full .object-cover')
                 ->pause(100)

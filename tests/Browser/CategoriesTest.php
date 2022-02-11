@@ -2,16 +2,10 @@
 
 namespace Tests\Browser;
 
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Subcategory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use \Illuminate\Support\Str;
 use Tests\TestHelpers;
 
 
@@ -25,20 +19,11 @@ class CategoriesTest extends DuskTestCase
     /** @test */
     public function it_shows_the_categories()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
-        $category2 = Category::factory()->create(['name' => 'TV, audio y video',
-            'slug' => Str::slug('TV, audio y video'),
-            'icon' => '<i class="fas fa-tv"></i>']);
-        $category3 = Category::factory()->create(['name' => 'Consola y videojuegos',
-            'slug' => Str::slug('Consola y videojuegos'),
-            'icon' => '<i class="fas fa-gamepad"></i>']);
-        $category4 = Category::factory()->create(['name' => 'Computación',
-            'slug' => Str::slug('Computación'),
-            'icon' => '<i class="fas fa-laptop"></i>']);
-        $category5 = Category::factory()->create(['name' => 'Moda', 'slug' => Str::slug('Moda'),
-            'icon' => '<i class="fas fa-tshirt"></i>']);
+        $category1 = $this->createCategory();
+        $category2 = $this->createCustomCategory('TV, audio y video');
+        $category3 = $this->createCustomCategory('Consola y videojuegos');
+        $category4 = $this->createCustomCategory('Computación');
+        $category5 = $this->createCustomCategory('Moda');
 
         $this->browse(function (Browser $browser) use($category1, $category2, $category3, $category4, $category5){
             $browser->visit('/')
@@ -65,43 +50,15 @@ class CategoriesTest extends DuskTestCase
     {
         $category = $this->createCategory();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Smartwatches',
-            'slug' => Str::slug('Smartwatches'),
-        ]);
+        $subcategory1 = $this->createSubcategory();
 
-        $subcategory2 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory2 = $this->createCustomSubcategory('1', 'Tablets');
 
         $brand1 = $category->brands()->create(['name' => 'LG']);
         $brand2 = $category->brands()->create(['name' => 'Xiaomi']);
 
-        $product1 = Product::factory()->create([
-            'name' => 'Tablet LG',
-            'slug' => 'tablet-lg',
-            'description' => 'tablet lg 4/64',
-            'subcategory_id' => $subcategory2->id,
-            'brand_id' => $brand1->id,
-            'price' => '262.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product2 = Product::factory()->create([
-            'name' => 'Smartwatch Xiaomi',
-            'slug' => 'smartwatch-xiaomi',
-            'description' => 'Smartwatch Xiaomi moderno',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand2->id,
-            'price' => '262.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-        $product1->images()->create(['url' => 'storage/324234324323423.png']);
-        $product2->images()->create(['url' => 'storage/32234234123.png']);
-
+        $product1 = $this->createCustomProduct('Tablet LG2080', $subcategory2, $brand1, 2);
+        $product2 = $this->createCustomProduct('Xiaomi A54',$subcategory1, $brand2,2);
 
         $this->browse(function (Browser $browser) use($category,$subcategory1, $subcategory2, $product1,$product2,$brand1, $brand2){
 
@@ -132,73 +89,17 @@ class CategoriesTest extends DuskTestCase
     /** @test */
     public function it_shows_at_least_5_products_from_a_category()
     {
-        $category = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category = $this->createCategory();
 
-        $subcategory = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory = $this->createSubcategory();
 
         $brand = $category->brands()->create(['name' => 'LG']);
 
-        $product1 = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product2 = Product::factory()->create([
-            'name' => 'Tablet LG4030',
-            'slug' => Str::slug('Tablet LG4030'),
-            'description' => 'Tablet LG4030' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '108.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product3 = Product::factory()->create([
-            'name' => 'Tablet LG4080',
-            'slug' => Str::slug('Tablet LG4080'),
-            'description' => 'Tablet LG4080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '98.99',
-            'quantity' => '20',
-            'status' => 2
-            ]);
-        $product4 = Product::factory()->create([
-            'name' => 'Tablet LG4182',
-            'slug' => Str::slug('Tablet LG4182'),
-            'description' => 'Tablet LG4182' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '298.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product5 = Product::factory()->create([
-            'name' => 'Tablet LG4182',
-            'slug' => Str::slug('Tablet LG4182'),
-            'description' => 'Tablet LG4182' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '199.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-
-        $product1->images()->create(['url' => 'storage/324234324323423.png']);
-        $product2->images()->create(['url' => 'storage/32234234123.png']);
-        $product3->images()->create(['url' => 'storage/324234324323423.png']);
-        $product4->images()->create(['url' => 'storage/32234234123.png']);
-        $product5->images()->create(['url' => 'storage/324234324323423.png']);
+        $product1 = $this->createCustomProduct('LG2080', $subcategory, $brand, 2);
+        $product2 = $this->createCustomProduct('LGK40', $subcategory, $brand, 2);
+        $product3 = $this->createCustomProduct('LGQ60', $subcategory, $brand, 2);
+        $product4 = $this->createCustomProduct('LGP40', $subcategory, $brand, 2);
+        $product5 = $this->createCustomProduct('LGH90', $subcategory, $brand, 2);
 
         $categoryTitle = strtoupper($category->name);
 
@@ -218,95 +119,20 @@ class CategoriesTest extends DuskTestCase
     /** @test */
     public function it_shows_at_least_5_products_which_are_published_from_a_category()
     {
-        $category = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category = $this->createCategory();
 
-        $subcategory = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory = $this->createSubcategory();
 
         $brand = $category->brands()->create(['name' => 'LG']);
 
-        $product1 = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product2 = Product::factory()->create([
-            'name' => 'Tablet LG4030',
-            'slug' => Str::slug('Tablet LG4030'),
-            'description' => 'Tablet LG4030' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '108.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product3 = Product::factory()->create([
-            'name' => 'Tablet LG4080',
-            'slug' => Str::slug('Tablet LG4080'),
-            'description' => 'Tablet LG4080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '98.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product4 = Product::factory()->create([
-            'name' => 'Tablet LG4182',
-            'slug' => Str::slug('Tablet LG4182'),
-            'description' => 'Tablet LG4182' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '298.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product5 = Product::factory()->create([
-            'name' => 'Tablet LG4182',
-            'slug' => Str::slug('Tablet LG4182'),
-            'description' => 'Tablet LG4182' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '199.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product6 = Product::factory()->create([
-            'name' => 'Tablet LG4019',
-            'slug' => Str::slug('Tablet LG4019'),
-            'description' => 'Tablet LG4019' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '199.99',
-            'quantity' => '20',
-            'status' => 1
-            ]);
-        $product7 = Product::factory()->create([
-            'name' => 'Tablet LG8519',
-            'slug' => Str::slug('Tablet LG8519'),
-            'description' => 'Tablet LG8519' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'price' => '199.99',
-            'quantity' => '20',
-            'status' => 1
-        ]);
+        $product1 = $this->createCustomProduct('LG2080', $subcategory, $brand, 2);
+        $product2 = $this->createCustomProduct('LGK40', $subcategory, $brand, 2);
+        $product3 = $this->createCustomProduct('LGQ60', $subcategory, $brand, 2);
+        $product4 = $this->createCustomProduct('LGP40', $subcategory, $brand, 2);
+        $product5 = $this->createCustomProduct('LGH90', $subcategory, $brand, 2);
 
-        $product1->images()->create(['url' => 'storage/324234324323423.png']);
-        $product2->images()->create(['url' => 'storage/32234234123.png']);
-        $product3->images()->create(['url' => 'storage/324234324323423.png']);
-        $product4->images()->create(['url' => 'storage/32234234123.png']);
-        $product5->images()->create(['url' => 'storage/324234324323423.png']);
-        $product6->images()->create(['url' => 'storage/324234324323423.png']);
-        $product7->images()->create(['url' => 'storage/324234324323423.png']);
+        $product6 = $this->createCustomProduct('LGH4090', $subcategory, $brand, 1);
+        $product7 = $this->createCustomProduct('LGH2050', $subcategory, $brand, 1);
 
         $category = strtoupper($category->name);
 
@@ -329,52 +155,28 @@ class CategoriesTest extends DuskTestCase
     /** @test */
     public function it_filters_by_subcategories()
     {
-        $category = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category = $this->createCategory();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory1 = $this->createSubcategory();
 
-        $subcategory2 = Subcategory::create(['category_id' => 1,
-            'name' => 'Celulares',
-            'slug' => Str::slug('Celulares'),
-        ]);
+        $subcategory2 = $this->createCustomSubcategory('1', 'Tablets');
 
         $brand = $category->brands()->create(['name' => 'LG']);
 
-        $product1 = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product2 = Product::factory()->create([
-            'name' => 'Móvil LG4030',
-            'slug' => Str::slug('Móvil LG4030'),
-            'description' => 'Móvil LG4030' . 'moderno año 2022',
-            'subcategory_id' => $subcategory2->id,
-            'brand_id' => $brand->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
+        $product1 = $this->createCustomProduct('LGP40', $subcategory1, $brand, 2);
+
+        $product2 = $this->createCustomProduct('Tablet LGP80', $subcategory2, $brand, 2);
+
         $categoryTitle = $category->slug;
 
-
-        $product1->images()->create(['url' => 'storage/324234324323423.png']);
-        $product2->images()->create(['url' => 'storage/32234234123.png']);
+        $subcategory1 = ucwords($subcategory1->name);
 
         $this->browse(function (Browser $browser) use($categoryTitle,$subcategory1,
             $subcategory2, $product1, $product2){
             $browser->visit('/categories/' . $categoryTitle)
                 ->click('li > a.cursor-pointer')
+                ->assertSeeIn('aside', $subcategory1)
+                ->assertSeeIn('aside', $subcategory2->name)
                 ->assertSee($product1->name)
                 ->assertDontSee($product2->name)
                 ->screenshot('subcategoriesFilter-test');
@@ -385,42 +187,18 @@ class CategoriesTest extends DuskTestCase
     public function it_filters_by_brands()
     {
 
-        $category = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category = $this->createCategory();
 
-        $subcategory = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory = $this->createSubcategory();
 
         $brand1 = $category->brands()->create(['name' => 'LG']);
         $brand2 = $category->brands()->create(['name' => 'Xiaomi']);
+
         $categoryTitle = $category->slug;
 
-        $product1 = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand1->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product2 = Product::factory()->create([
-            'name' => 'Móvil Xiaomi redmi note 8',
-            'slug' => Str::slug('Móvil Xiaomi redmi note 8'),
-            'description' => 'Móvil Xiaomi redmi note 8' . 'moderno año 2022',
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand2->id,
-            'price' => '148.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
+        $product1 = $this->createCustomProduct('LGP40', $subcategory, $brand1, 2);
+        $product2 = $this->createCustomProduct('Xiaomi A54', $subcategory, $brand2, 2);
 
-        $product1->images()->create(['url' => 'storage/324234324323423.png']);
-        $product2->images()->create(['url' => 'storage/32234234123.png']);
 
         $this->browse(function (Browser $browser) use($categoryTitle, $product1, $product2){
             $browser->visit('/categories/' . $categoryTitle)
@@ -435,46 +213,20 @@ class CategoriesTest extends DuskTestCase
     /** @test */
     public function it_filters_by_subcategories_and_brands()
     {
-        $category = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category = $this->createCategory();
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory1 = $this->createSubcategory();
 
-        $subcategory2 = Subcategory::create(['category_id' => 1,
-            'name' => 'Celulares',
-            'slug' => Str::slug('Celulares'),
-        ]);
+        $subcategory2 = $this->createCustomSubcategory(1, 'Tablets');
+
         $brand1 = $category->brands()->create(['name' => 'LG']);
         $brand2 = $category->brands()->create(['name' => 'Xiaomi']);
+
         $categoryTitle = $category->slug;
 
-        $product1 = Product::factory()->create([
-            'name' => 'Tablet LG2080',
-            'slug' => Str::slug('Tablet LG2080'),
-            'description' => 'Tablet LG2080' . 'moderno año 2022',
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand1->id,
-            'price' => '118.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
-        $product2 = Product::factory()->create([
-            'name' => 'Móvil Xiaomi redmi note 8',
-            'slug' => Str::slug('Móvil Xiaomi redmi note 8'),
-            'description' => 'Móvil Xiaomi redmi note 8' . 'moderno año 2022',
-            'subcategory_id' => $subcategory2->id,
-            'brand_id' => $brand2->id,
-            'price' => '148.99',
-            'quantity' => '20',
-            'status' => 2
-        ]);
+        $product1 = $this->createCustomProduct('Móvil Xiaomi redmi note 8', $subcategory1, $brand1, 2);
 
-        $product1->images()->create(['url' => 'storage/324234324323423.png']);
-        $product2->images()->create(['url' => 'storage/32234234123.png']);
+        $product2 = $this->createCustomProduct('Tablet LG2070', $subcategory2, $brand2, 2);
 
         $this->browse(function (Browser $browser) use($categoryTitle,$product1, $product2){
             $browser->visit('/categories/' . $categoryTitle)

@@ -2,19 +2,11 @@
 
 namespace Tests\Browser;
 
-use App\Http\Livewire\AddCartItemColor;
-use App\Http\Livewire\AddCartItemSize;
-use App\Models\Category;
 use App\Models\Color;
-use App\Models\ColorProduct;
-use App\Models\Product;
 use App\Models\Size;
-use App\Models\Subcategory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
-use Livewire\Livewire;
 use Tests\DuskTestCase;
 use Tests\TestHelpers;
 
@@ -28,8 +20,6 @@ class ProductsTest extends DuskTestCase
     public function the_products_details_are_shown()
     {
         $product = $this->createProduct();
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
         $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use($product) {
@@ -55,13 +45,7 @@ class ProductsTest extends DuskTestCase
     public function the_color_products_details_are_shown()
     {
         $product = $this->createColorProduct();
-
         $product->images()->create(['url' => 'storage/324234324323423.png']);
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Blanco']);
-
-        $product->colors()->attach([1 => ['quantity' => 20]]);
 
         $this->browse(function (Browser $browser) use($product) {
             $browser->visit('products/' . $product->id)
@@ -86,18 +70,7 @@ class ProductsTest extends DuskTestCase
     public function the_size_color_products_details_are_shown()
     {
         $product = $this->createColorSizeProduct();
-
         $product->images()->create(['url' => 'storage/324234324323423.png']);
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Blanco']);
-
-        $product->colors()->attach([1 => ['quantity' => 20]]);
-
-        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
-        $size->colors()
-            ->attach([
-                1 => ['quantity' => 20]]);
 
         $this->browse(function (Browser $browser) use($product) {
             $browser->visit('products/' . $product->id)
@@ -124,7 +97,6 @@ class ProductsTest extends DuskTestCase
         $product = $this->createProduct();
         $product->quantity = '2';
         $product->save();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('products/' . $product->id)
@@ -142,8 +114,6 @@ class ProductsTest extends DuskTestCase
     public function it_is_possible_to_access_the_detail_view_of_a_product()
     {
        $product = $this->createProduct();
-
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use($product){
             $browser->visit('products/' . $product->id)
@@ -167,7 +137,7 @@ class ProductsTest extends DuskTestCase
     public function the_color_and_size_dropdowns_are_shown_according_to_the_chosen_product()
     {
         $product = $this->createColorProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
         $this->get('products/' . $product->id)
             ->assertSeeLivewire('add-cart-item-color');
 
@@ -179,8 +149,6 @@ class ProductsTest extends DuskTestCase
         });
 
         $sizeProduct = $this->createColorSizeProduct();
-
-        $sizeProduct->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->get('products/' . $sizeProduct->id)
             ->assertSeeLivewire('add-cart-item-size');
@@ -199,7 +167,6 @@ class ProductsTest extends DuskTestCase
     public function the_available_stock_of_a_product_changes()
     {
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('products/' . $product->id)
@@ -215,11 +182,6 @@ class ProductsTest extends DuskTestCase
     public function the_available_stock_of_a_color_product_changes()
     {
         $product = $this->createColorProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Black']);
-
-        $product->colors()->attach([1 => ['quantity' => 20]]);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('products/' . $product->id)
@@ -240,16 +202,6 @@ class ProductsTest extends DuskTestCase
     public function the_available_stock_of_a_color_size_product_changes()
     {
         $product = $this->createColorSizeProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
-
-        Color::create(['name' => 'Black']);
-
-        $product->colors()->attach([1 => ['quantity' => 20]]);
-
-        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
-        $size->colors()
-            ->attach([
-                1 => ['quantity' => 20]]);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('products/' . $product->id)

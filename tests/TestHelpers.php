@@ -3,9 +3,11 @@
 namespace Tests;
 
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Image;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Size;
 use App\Models\Subcategory;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -38,6 +40,8 @@ trait TestHelpers
 
         $order->content = $product;
         $order->save();
+
+        return $order;
     }
 
     public function createCategory()
@@ -47,11 +51,29 @@ trait TestHelpers
             'icon' => '<i class="fas fa-mobile-alt"></i>']);
     }
 
+    public function createCustomCategory($name)
+    {
+        return Category::factory()->create(['name' => $name,
+            'slug' => Str::slug($name),
+            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+    }
+
+
     public function createSubcategory()
     {
         return Subcategory::create([
                 'category_id' => 1,'name' => 'Celulares y smartphones',
                 'slug' => Str::slug('Celulares y smartphones'),
+            ]
+        );
+    }
+
+    public function createCustomSubcategory($id, $name)
+    {
+        return Subcategory::create([
+                'category_id' => $id,
+                'name' => $name,
+                'slug' => Str::slug($name),
             ]
         );
     }
@@ -82,6 +104,7 @@ trait TestHelpers
         return $category->brands()->create(['name' => 'LG']);
     }
 
+
     public function createUser()
     {
         return User::factory()->create([
@@ -98,7 +121,8 @@ trait TestHelpers
         $subcategory = $this->createSubcategory();
 
         $brand = $category->brands()->create(['name' => 'LG']);
-        return Product::factory()->create([
+
+        $product = Product::factory()->create([
             'name' => 'Tablet LG2080',
             'slug' => Str::slug('Tablet LG2080'),
             'description' => 'Tablet LG2080' . 'moderno año 2022',
@@ -108,6 +132,28 @@ trait TestHelpers
             'quantity' => '20',
             'status' => 2
         ]);
+       $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+       return $product;
+    }
+
+    public function createCustomProduct($name, $subcategory, $brand, $status)
+    {
+        $product = Product::factory()->create([
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'description' => $name . ' moderno año 2022',
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'price' => '118.99',
+            'quantity' => '20',
+            'status' => $status
+        ]);
+
+
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        return $product;
     }
 
     public function createProducts($products)
@@ -124,7 +170,7 @@ trait TestHelpers
         $subcategory = $this->createColorSubcategory();
 
         $brand = $category->brands()->create(['name' => 'LG']);
-        return Product::factory()->create([
+        $product = Product::factory()->create([
             'name' => 'Tablet LG2080',
             'slug' => Str::slug('Tablet LG2080'),
             'description' => 'Tablet LG2080' . 'moderno año 2022',
@@ -134,6 +180,14 @@ trait TestHelpers
             'quantity' => '20',
             'status' => 2
         ]);
+
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        Color::create(['name' => 'Blanco']);
+
+        $product->colors()->attach([1 => ['quantity' => 20]]);
+
+        return $product;
     }
 
     public function createColorSizeProduct()
@@ -143,7 +197,7 @@ trait TestHelpers
         $subcategory = $this->createColorSizeSubcategory();
 
         $brand = $category->brands()->create(['name' => 'LG']);
-        return Product::factory()->create([
+        $product = Product::factory()->create([
             'name' => 'Tablet LG2080',
             'slug' => Str::slug('Tablet LG2080'),
             'description' => 'Tablet LG2080' . 'moderno año 2022',
@@ -153,5 +207,44 @@ trait TestHelpers
             'quantity' => '20',
             'status' => 2
         ]);
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        Color::create(['name' => 'Blanco']);
+
+        $product->colors()->attach([1 => ['quantity' => 20]]);
+
+        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
+        $size->colors()->attach([1 => ['quantity' => 20]]);
+
+        return $product;
+    }
+
+    public function createOutStockColorSizeProduct()
+    {
+        $category = $this->createCategory();
+
+        $subcategory = $this->createColorSizeSubcategory();
+
+        $brand = $category->brands()->create(['name' => 'LG']);
+        $product = Product::factory()->create([
+            'name' => 'Tablet LG2080',
+            'slug' => Str::slug('Tablet LG2080'),
+            'description' => 'Tablet LG2080' . 'moderno año 2022',
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'price' => '118.99',
+            'quantity' => 0,
+            'status' => 2
+        ]);
+        $product->images()->create(['url' => 'storage/324234324323423.png']);
+
+        Color::create(['name' => 'Blanco']);
+
+        $product->colors()->attach([1 => ['quantity' => 0]]);
+
+        $size = Size::create(['name' => 'XL', 'product_id'=>$product->id]);
+        $size->colors()->attach([1 => ['quantity' => 0]]);
+
+        return $product;
     }
 }

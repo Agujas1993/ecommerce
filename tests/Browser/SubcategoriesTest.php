@@ -21,33 +21,17 @@ class SubcategoriesTest extends DuskTestCase
     /** @test */
     public function it_shows_the_subcategories_linked_to_a_category()
     {
-        $category1 = Category::factory()->create(['name' => 'Celulares y tablets',
-            'slug' => Str::slug('Celulares y tablets'),
-            'icon' => '<i class="fas fa-mobile-alt"></i>']);
+        $category1 = $this->createCategory();
 
-        $category2 = Category::factory()->create(['name' => 'TV, audio y video',
-            'slug' => Str::slug('TV, audio y video'),
-            'icon' => '<i class="fas fa-tv"></i>']);
+        $category2 = $this->createCustomCategory("Tv, audio y vídeo");
 
-        $subcategory1 = Subcategory::create(['category_id' => 1,
-            'name' => 'Smartwatches',
-            'slug' => Str::slug('Smartwatches'),
-            ]);
+        $subcategory1 = $this->createSubcategory();
 
-        $subcategory2 = Subcategory::create(['category_id' => 1,
-            'name' => 'Tablets',
-            'slug' => Str::slug('Tablets'),
-        ]);
+        $subcategory2 = $this->createCustomSubcategory(1,'Tablets');
 
-        $hiddenSubcategory1 = Subcategory::create(['category_id' => 2,
-            'name' => 'Auriculares',
-            'slug' => Str::slug('Auriculares'),
-        ]);
+        $hiddenSubcategory1 = $this->createCustomSubcategory(2,'Video');
 
-        $hiddenSubcategory2 = Subcategory::create(['category_id' => 2,
-            'name' => 'Altavoces',
-            'slug' => Str::slug('Altavoces'),
-        ]);
+        $hiddenSubcategory2 = $this->createCustomSubcategory(2,'Audio');
 
         $this->browse(function (Browser $browser) use ($category1,$category2, $subcategory1, $subcategory2,$hiddenSubcategory1,$hiddenSubcategory2){
             $browser->visit('/')
