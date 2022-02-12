@@ -98,13 +98,17 @@
                                 @endif
                         </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-6 py-4 text-left text-sm font-medium">
+                            @if($product->sizes->count())
                                 @foreach($product->sizes as $size)
                                 <span><b>{{ $size->name . ': '}}</b></span>
                                     @foreach($size->colors as $color)
                                     <span>{{__(ucfirst($color->name)) . '(' . $color->pivot->quantity . ')' }}</span>
                                 @endforeach
                             @endforeach
+                            @else
+                                <span>Sin talla</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
