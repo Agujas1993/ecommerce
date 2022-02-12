@@ -2,19 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Http\Livewire\CreateOrder;
-use App\Models\Category;
 use App\Models\Order;
-use App\Models\Product;
-use App\Models\Subcategory;
-use App\Models\User;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Livewire\Livewire;
 use Tests\TestCase;
 use Tests\TestHelpers;
 
