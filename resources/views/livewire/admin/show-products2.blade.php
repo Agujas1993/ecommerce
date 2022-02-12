@@ -89,22 +89,22 @@
                             {{ $product->created_at }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-
+                            @if($product->colors->count())
                             @foreach($product->colors as $color)
-                            <span>{{ __(ucfirst($color->name)) . ', '}}</span>
+                            <span>{{ __(ucfirst($colors->find($color)->name)). ': ' . $color->pivot->quantity . ', '}}</span>
                             @endforeach
-
+                            @else
+                            <span>Sin color</span>
+                                @endif
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            @if($product->sizes()->first() !== null)
-
                                 @foreach($product->sizes as $size)
-                                    <span>{{ $size->name. ': ' . $size->color . ', '}}</span>
+                                <span><b>{{ $size->name . ': '}}</b></span>
+                                    @foreach($size->colors as $color)
+                                    <span>{{__(ucfirst($color->name)) . '(' . $color->pivot->quantity . ')' }}</span>
                                 @endforeach
-                            @else
-                                <span>Sin Talla</span>
-                            @endif
+                            @endforeach
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
