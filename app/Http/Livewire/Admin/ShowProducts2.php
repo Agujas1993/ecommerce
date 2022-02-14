@@ -37,8 +37,8 @@ class ShowProducts2 extends Component
         $this->colors = Color::all();
         $this->sizes = Size::all();
         $this->selectedColumns = $this->columns;
-        $this->categories = Category::all();
-        $this->subcategories = SubCategory::all();
+        $this->categories = Category::orderBy('name')->get();
+        $this->subcategories = SubCategory::orderBy('name')->get();
         $this->originalUrl = $request->url();
     }
 
@@ -53,6 +53,11 @@ class ShowProducts2 extends Component
     }
 
     public function updatingSelectedSubcategories()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedCategories()
     {
         $this->resetPage();
     }

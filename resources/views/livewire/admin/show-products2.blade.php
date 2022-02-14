@@ -34,9 +34,17 @@
                                  wire:model="search"
                                  type="text"
                                  placeholder="Introduzca el nombre del producto a buscar" />
-                </div>
-                <div>
-                    <label>
+                    <label class="ml-2">
+                        Categoría
+                    </label>
+                    <select wire:model="selectedCategories">
+                        <option value="" selected disabled>Seleccionar una Categoría</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <label class="ml-2">
                         Subcategoría
                     </label>
                     <select wire:model="selectedSubcategories">
