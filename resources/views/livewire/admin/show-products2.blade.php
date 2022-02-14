@@ -10,12 +10,6 @@
         </div>
     </x-slot>
     <x-table-responsive>
-        <div class="px-6 py-4">
-            <x-jet-input class="w-full"
-                         wire:model="search"
-                         type="text"
-                         placeholder="Introduzca el nombre del producto a buscar" />
-        </div>
         <div x-data="{ open: false }">
         <select wire:model="per_page" class="bg-gray-200">
             <option value="10">Mostrar 10</option>
@@ -31,6 +25,28 @@
             <label>{{$column}}</label>
         @endforeach
         </div>
+        </div>
+        <div x-data="{ open: false }">
+            <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Filtros</button></b>
+            <div x-show="open">
+                <div class="px-6 py-4">
+                    <x-jet-input class="w-96"
+                                 wire:model="search"
+                                 type="text"
+                                 placeholder="Introduzca el nombre del producto a buscar" />
+                </div>
+                <div>
+                    <label>
+                        Subcategoría
+                    </label>
+                    <select wire:model="selectedSubcategories">
+                        <option value="" selected disabled>Seleccionar una subcategoría</option>
+                        @foreach($subcategories as $subcategory)
+                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
         @if($products->count())
             <table class="min-w-full divide-y divide-gray-200 overflow-x-auto block whitespace-nowrap">
