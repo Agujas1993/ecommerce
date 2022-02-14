@@ -14,6 +14,9 @@ class ShowProducts2 extends Component
     public $colors;
     public $sizes;
     public $search;
+    public $per_page = 15;
+    public $columns = ['Id','Nombre', 'Slug', 'Descripción','Categoría','Estado','Stock','Precio','Subcategoría','Marca','Fecha creación','Colores', 'Tallas'];
+    public $selectedColumns = [];
 
     public function updatingSearch()
     {
@@ -23,11 +26,22 @@ class ShowProducts2 extends Component
     {
         $this->colors = Color::all();
         $this->sizes = Size::all();
+        $this->selectedColumns = $this->columns;
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function showColumn($column)
+    {
+        return in_array($column, $this->selectedColumns);
     }
 
     public function render()
     {
-        $products = Product::where('name', 'LIKE', "%{$this->search}%")->paginate(10);
+        $products = Product::where('name', 'LIKE', "%{$this->search}%")->paginate($this->per_page);
 
         return view('livewire.admin.show-products2', compact('products'))->layout('layouts.admin');
     }
