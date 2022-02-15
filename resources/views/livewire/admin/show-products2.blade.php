@@ -30,7 +30,7 @@
             <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Filtros</button></b>
             <div x-show="open">
                 <div class="px-6 py-4">
-                    <x-jet-input class="w-96"
+                    <x-jet-input class="w-60"
                                  wire:model="search"
                                  type="text"
                                  placeholder="Introduzca el nombre del producto a buscar" />
@@ -54,6 +54,15 @@
                         @endforeach
                     </select>
                 </div>
+                <label class="ml-2">
+                    Marcas
+                </label>
+                <select wire:model="selectedBrands">
+                    <option value="" selected disabled>Seleccionar una marca</option>
+                    @foreach($brands as $brand)
+                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         @if($products->count())
@@ -61,69 +70,69 @@
                 <thead class="bg-gray-50">
                 <tr>
                     @if($this->showColumn('Id'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Id
+                        <th scope="col" wire:click="sort('id')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                           <button>ID</button>
                         </th>
                     @endif
 
                     @if($this->showColumn('Nombre'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nombre
+                    <th scope="col" wire:click="sort('name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>NOMBRE</button>
                     </th>
                     @endif
                         @if($this->showColumn('Slug'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Slug
+                            <th scope="col" wire:click="sort('slug')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button>SLUG</button>
                             </th>
                         @endif
                         @if($this->showColumn('Descripción'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Descripción
+                            <th scope="col"  wire:click="sort('description')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button>DESCRIPCIÓN</button>
                             </th>
                         @endif
                         @if($this->showColumn('Categoría'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Categoría
+                    <th scope="col"  wire:click="sort('')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>CATEGORÍA</button>
                     </th>
                         @endif
                         @if($this->showColumn('Estado'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Estado
+                    <th scope="col" wire:click="sort('status')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>ESTADO</button>
                     </th>
                         @endif
                         @if($this->showColumn('Stock'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Stock
+                            <th scope="col" wire:click="sort('')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button>STOCK</button>
                             </th>
                         @endif
                         @if($this->showColumn('Precio'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Precio
+                    <th scope="col" wire:click="sort('price')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>PRECIO</button>
                     </th>
                         @endif
                         @if($this->showColumn('Subcategoría'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Subcategoría
+                    <th scope="col" wire:click="sort('subcategory_id')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>SUBCATEGORÍA</button>
                     </th>
                         @endif
                         @if($this->showColumn('Marca'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Marca
+                    <th scope="col" wire:click="sort('brand_id')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>MARCA</button>
                     </th>
                         @endif
                         @if($this->showColumn('Fecha creación'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Fecha Creación
+                    <th scope="col" wire:click="sort('created_at')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>FECHA CREACIÓN</button>
                     </th>
                         @endif
                         @if($this->showColumn('Colores'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Colores
+                    <th scope="col" wire:click="sort('colors')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>COLORES</button>
                     </th>
                         @endif
                         @if($this->showColumn('Tallas'))
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Tallas
+                    <th scope="col" wire:click="sort('')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <button>TALLAS</button>
                     </th>
                         @endif
                 </tr>

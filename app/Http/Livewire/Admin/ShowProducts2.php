@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
@@ -24,9 +25,12 @@ class ShowProducts2 extends Component
     public $selectedColumns = [];
     public $selectedCategories = '';
     public $categories;
+    public $selectedBrands = '';
+    public $brands;
     public $subcategories;
     public $selectedSubcategories = '';
-    public $order;
+    public $sortColumn = "id";
+    public $sortDirection = "asc";
 
     public function updatingSearch()
     {
@@ -39,6 +43,7 @@ class ShowProducts2 extends Component
         $this->selectedColumns = $this->columns;
         $this->categories = Category::orderBy('name')->get();
         $this->subcategories = SubCategory::orderBy('name')->get();
+        $this->brands = Brand::orderBy('name')->get();
         $this->originalUrl = $request->url();
     }
 
@@ -50,6 +55,12 @@ class ShowProducts2 extends Component
     public function changeOrder($order)
     {
         $this->order = $order;
+    }
+
+    public function sort($column)
+    {
+        $this->sortColumn = $column;
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
     }
 
     public function updatingSelectedSubcategories()
@@ -71,9 +82,12 @@ class ShowProducts2 extends Component
     {
         $sortable = new Sortable($this->originalUrl);
 
-        $products = Product::where('name', 'LIKE', "%{$this->search}%")->when($this->selectedSubcategories, function($query) {
+        $products = Product::orderBy($this->sortColumn, $this->sortDirection)->where('name', 'LIKE', "%{$this->search}%")
+            ->when($this->selectedSubcategories, function($query) {
             return $query->where('subcategory_id', $this->selectedSubcategories);
-        })->paginate($this->per_page);
+        })->when($this->selectedBrands, function($query) {
+                return $query->where('brand_id', $this->selectedBrands);
+            })->paginate($this->per_page);
 
         return view('livewire.admin.show-products2', compact('products', 'sortable'))->layout('layouts.admin');
     }
