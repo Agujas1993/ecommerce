@@ -44,7 +44,7 @@
     <div class="mb-4">
         <div wire:ignore>
             <x-jet-label value="Descripción" />
-            <textarea class="w-full form-control" rows="4"
+            <textarea class="w-full form-control ck" rows="4"
                       wire:model="description"
                       x-data
                       x-init="ClassicEditor.create($refs.miEditor)

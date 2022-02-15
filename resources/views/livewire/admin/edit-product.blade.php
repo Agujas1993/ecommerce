@@ -20,7 +20,7 @@
           id="my-awesome-dropzone"></form>
 </div>
     @if ($product->images->count())
-        <section class="bg-white shadow-xl rounded-lg p-6 mb-4">
+        <section class="bg-white shadow-xl rounded-lg">
             <h1 class="text-2xl text-center font-semibold mb-2">Imagenes del producto</h1>
             <ul class="flex flex-wrap">
                 @foreach ($product->images as $image)
@@ -82,7 +82,7 @@
     <div class="mb-4">
         <div wire:ignore>
             <x-jet-label value="Descripción" />
-            <textarea class="w-full form-control" rows="4"
+            <textarea class="w-full form-control ck" rows="4"
                       wire:model="product.description"
                       x-data
                       x-init="ClassicEditor.create($refs.miEditor)
@@ -171,7 +171,7 @@ console.error( error );
             }
         };
     </script>
-    <script>
+    <script type="text/javascript">
         Livewire.on('deleteSize', sizeId => {
             Swal.fire({
                 title: 'Are you sure?',
@@ -201,7 +201,7 @@ console.error( error );
         });
     </script>
 
-    <script>
+    <script type="text/javascript">
         Livewire.on('deleteColor', pivot => {
             Swal.fire({
                 title: 'Are you sure?',
@@ -223,12 +223,13 @@ console.error( error );
             })
         })
     </script>
-    <script>
+    <script type="text/javascript">
         Livewire.on('deleteProduct', () => {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
+                timer: 20000,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
