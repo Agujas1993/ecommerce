@@ -34,7 +34,8 @@ class ShowProducts2 extends Component
     public $selectedToDate = "";
     public $selectedMinPrice = "";
     public $selectedMaxPrice = "";
-
+    public $quantities = [0,10,20,50];
+    public $selectedStock = "";
 
     public function updatingSearch()
     {
@@ -92,6 +93,11 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
+    public function updatingSelectedStock()
+    {
+        $this->resetPage();
+    }
+
     public function showColumn($column)
     {
         return in_array($column, $this->selectedColumns);
@@ -112,6 +118,8 @@ class ShowProducts2 extends Component
                 return $query->where('price', '>=', $this->selectedMinPrice);
             })->when($this->selectedMaxPrice, function($query) {
                 return $query->where('price', '<=', $this->selectedMaxPrice);
+            })->when($this->selectedStock, function($query) {
+                return $query->where('quantity', '>=', $this->selectedStock);
             })->paginate($this->per_page);
 
         return view('livewire.admin.show-products2', compact('products'))->layout('layouts.admin');

@@ -79,7 +79,13 @@
                     <input type="text" placeholder="Precio mínimo" wire:model="selectedMinPrice"/>
                     <input type="text" placeholder="Precio máximo" wire:model="selectedMaxPrice"/>
                 </div>
-                <input type="text">
+                <div class="mt-4">
+                <span>Stock: </span>
+                @foreach($quantities as $stock)
+                    <label for="">{{ $stock . "+" }}</label>
+                <input type="radio" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
+                @endforeach
+                </div>
             </div>
         </div>
         @if($products->count())
@@ -118,7 +124,7 @@
                     </th>
                         @endif
                         @if($this->showColumn('Stock'))
-                            <th scope="col" wire:click="sort('')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" wire:click="sort('quantity')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <button>STOCK</button>
                             </th>
                         @endif
@@ -200,8 +206,13 @@
                         </td>
                             @endif
                             @if($this->showColumn('Stock'))
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $product->stock }}
+                                    @if($product->quantity !== null)
+                                    {{ $product->quantity }}
+                                    @else
+                                        Tiene color y/o talla
+                                    @endif
                                 </td>
                             @endif
                             @if($this->showColumn('Precio'))
