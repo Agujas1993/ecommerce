@@ -54,6 +54,7 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
                 <label class="ml-2">
                     Marcas
                 </label>
@@ -63,6 +64,22 @@
                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                     @endforeach
                 </select>
+
+                <label class="ml-2">
+                    Desde
+                </label>
+                <input type="date"  wire:model="selectedFromDate"/>
+                <label class="ml-2">
+                    Hasta
+                </label>
+                <input type="date" wire:model="selectedToDate"/>
+                    <label class="ml-2">
+                        Precio
+                    </label>
+                    <input type="text" placeholder="Precio mínimo" wire:model="selectedMinPrice"/>
+                    <input type="text" placeholder="Precio máximo" wire:model="selectedMaxPrice"/>
+                </div>
+                <input type="text">
             </div>
         </div>
         @if($products->count())

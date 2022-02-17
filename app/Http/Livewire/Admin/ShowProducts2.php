@@ -18,7 +18,6 @@ class ShowProducts2 extends Component
     use WithPagination;
     public $colors;
     public $sizes;
-    public $originalUrl;
     public $search;
     public $per_page = 15;
     public $columns = ['Id','Nombre', 'Slug', 'Descripción','Categoría','Estado','Stock','Precio','Subcategoría','Marca','Fecha creación','Colores', 'Tallas'];
@@ -31,11 +30,17 @@ class ShowProducts2 extends Component
     public $selectedSubcategories = '';
     public $sortColumn = "id";
     public $sortDirection = "asc";
+    public $selectedFromDate = "";
+    public $selectedToDate = "";
+    public $selectedMinPrice = "";
+    public $selectedMaxPrice = "";
+
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
+
     public function mount(Request $request)
     {
         $this->colors = Color::all();
@@ -44,17 +49,11 @@ class ShowProducts2 extends Component
         $this->categories = Category::orderBy('name')->get();
         $this->subcategories = SubCategory::orderBy('name')->get();
         $this->brands = Brand::orderBy('name')->get();
-        $this->originalUrl = $request->url();
     }
 
     public function updatingPerPage()
     {
         $this->resetPage();
-    }
-
-    public function changeOrder($order)
-    {
-        $this->order = $order;
     }
 
     public function sort($column)
@@ -68,7 +67,27 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
+    public function updatingSelectedFromDate()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedToDate()
+    {
+        $this->resetPage();
+    }
+
     public function updatingSelectedCategories()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedMinPrice()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedMaxPrice()
     {
         $this->resetPage();
     }
@@ -80,15 +99,21 @@ class ShowProducts2 extends Component
 
     public function render()
     {
-        $sortable = new Sortable($this->originalUrl);
-
         $products = Product::orderBy($this->sortColumn, $this->sortDirection)->where('name', 'LIKE', "%{$this->search}%")
             ->when($this->selectedSubcategories, function($query) {
             return $query->where('subcategory_id', $this->selectedSubcategories);
         })->when($this->selectedBrands, function($query) {
                 return $query->where('brand_id', $this->selectedBrands);
+            })->when($this->selectedFromDate, function($query) {
+                return $query->where('created_at', '>=', $this->selectedFromDate);
+            })->when($this->selectedToDate, function($query) {
+                return $query->where('created_at', '<=', $this->selectedToDate);
+            })->when($this->selectedMinPrice, function($query) {
+                return $query->where('price', '>=', $this->selectedMinPrice);
+            })->when($this->selectedMaxPrice, function($query) {
+                return $query->where('price', '<=', $this->selectedMaxPrice);
             })->paginate($this->per_page);
 
-        return view('livewire.admin.show-products2', compact('products', 'sortable'))->layout('layouts.admin');
+        return view('livewire.admin.show-products2', compact('products'))->layout('layouts.admin');
     }
 }
