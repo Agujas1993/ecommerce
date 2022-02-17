@@ -83,8 +83,14 @@
                 <span>Stock: </span>
                 @foreach($quantities as $stock)
                     <label for="">{{ $stock . "+" }}</label>
-                <input type="radio" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
+                <input type="radio" name="stock" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
                 @endforeach
+                    <span x-data="{ open: false }">
+                    <input type="radio" name="stock" @click.away="open = false" @click="open = !open" >Otro</button>
+                        <span x-show="open">
+                    <input type="text"  class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
+                        </span>
+                        </span>
                 </div>
             </div>
         </div>
