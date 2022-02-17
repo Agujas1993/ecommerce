@@ -29,8 +29,7 @@ import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 import 'glider-js/glider.min'
-var $ = require( "jquery" );
-global.$ = require("jquery");
-global.jQuery = global.$;
-import 'flexslider/jquery.flexslider'
+import 'flexslider/jquery.flexslider-min'
+import 'flexslider/flexslider.css';
+window.$ = window.jQuery = require('jquery');
 
