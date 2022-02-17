@@ -48,12 +48,14 @@ $product->brand->name }}</a></p>
     </div>
     @push('scripts')
         <script>
-            $(document).ready(function() {
-                $('.flexslider').flexslider({
-                    animation: "slide",
-                    controlNav: "thumbnails"
-                });
-            });
+           document.addEventListener("DOMContentLoaded", () =>{
+               $(document).ready(function() {
+                   $('.flexslider').flexslider({
+                       animation: "slide",
+                       controlNav: "thumbnails"
+                   });
+               });
+           });
         </script>
     @endpush
 </x-app-layout>
