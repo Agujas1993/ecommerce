@@ -155,23 +155,24 @@ console.error( error );
 
 @push('scripts')
     <script>
-        Dropzone.options.myAwesomeDropzone = {
-            headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            dictDefaultMessage: "Mueva una imagen al recuadro",
-            acceptedFiles: 'image/*',
-            paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 2, // MB
-            complete: function(file) {
-                this.removeFile(file);
-            },
-            queuecomplete: function() {
-                Livewire.emit('refreshProduct');
-            }
-        };
-    </script>
-    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", () =>{
+            Dropzone.options.myAwesomeDropzone = {
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                dictDefaultMessage: "Mueva una imagen al recuadro",
+                acceptedFiles: 'image/*',
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 2, // MB
+                complete: function(file) {
+                    this.removeFile(file);
+                },
+                queuecomplete: function() {
+                    Livewire.emit('refreshProduct');
+                }
+            };
+        });
+
         Livewire.on('deleteSize', sizeId => {
             Swal.fire({
                 title: 'Are you sure?',
@@ -190,8 +191,8 @@ console.error( error );
                         'success'
                     )
                 }
-            })
-        })
+            });
+        });
         Livewire.on('errorSize', mensaje => {
             Swal.fire({
                 icon: 'error',
@@ -199,9 +200,7 @@ console.error( error );
                 text: mensaje,
             }) /* */
         });
-    </script>
 
-    <script type="text/javascript">
         Livewire.on('deleteColor', pivot => {
             Swal.fire({
                 title: 'Are you sure?',
@@ -220,10 +219,8 @@ console.error( error );
                         'success'
                     )
                 }
-            })
-        })
-    </script>
-    <script type="text/javascript">
+            });
+        });
         Livewire.on('deleteProduct', () => {
             Swal.fire({
                 title: 'Are you sure?',
@@ -243,8 +240,8 @@ console.error( error );
                         'success'
                     )
                 }
-            })
-        })
+            });
+        });
     </script>
 @endpush
 </div>
