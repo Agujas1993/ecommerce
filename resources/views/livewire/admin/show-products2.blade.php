@@ -30,12 +30,13 @@
             <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Filtros</button></b>
             <div x-show="open">
                 <div class="px-6 py-4">
-                    <x-jet-input class="w-60"
+                    <x-jet-input class="w-96"
                                  wire:model="search"
                                  type="text"
                                  placeholder="Introduzca el nombre del producto a buscar" />
-                    <label class="ml-2">
-                        Categoría
+                    <label class="ml-2"><b>
+                            Categoría:
+                        </b>
                     </label>
                     <select wire:model="selectedCategories">
                         <option value="" selected disabled>Seleccionar una Categoría</option>
@@ -44,8 +45,9 @@
                         @endforeach
                     </select>
 
-                    <label class="ml-2">
-                        Subcategoría
+                    <label class="ml-2"><b>
+                            Subcategorías:
+                        </b>
                     </label>
                     <select wire:model="selectedSubcategories">
                         <option value="" selected disabled>Seleccionar una subcategoría</option>
@@ -55,9 +57,10 @@
                     </select>
                 </div>
                 <div>
-                <label class="ml-2">
-                    Marcas
-                </label>
+                    <label class="ml-2"><b>
+                            Marcas:
+                        </b>
+                    </label>
                 <select wire:model="selectedBrands">
                     <option value="" selected disabled>Seleccionar una marca</option>
                     @foreach($brands as $brand)
@@ -65,43 +68,48 @@
                     @endforeach
                 </select>
 
-                <label class="ml-2">
-                    Desde
-                </label>
-                <input type="date"  wire:model="selectedFromDate"/>
-                <label class="ml-2">
-                    Hasta
-                </label>
-                <input type="date" wire:model="selectedToDate"/>
-                    <label class="ml-2">
-                        Precio
+                    <label class="ml-2"><b>
+                            Desde:
+                        </b>
                     </label>
-                    <input type="text" placeholder="Precio mínimo" wire:model="selectedMinPrice"/>
-                    <input type="text" placeholder="Precio máximo" wire:model="selectedMaxPrice"/>
+                <input type="date"  wire:model="selectedFromDate"/>
+                    <label class="ml-2"><b>
+                            Hasta:
+                        </b>
+                    </label>
+                <input type="date" wire:model="selectedToDate"/>
+                    <label class="ml-2"><b>
+                            Precio:
+                        </b>
+                    </label>
+                    <input type="text" size="10" placeholder="Precio mínimo" wire:model="selectedMinPrice"/>
+                    <input type="text" size="10" placeholder="Precio máximo" wire:model="selectedMaxPrice"/>
                 </div>
-                <div class="mt-4">
-                <span>Stock: </span>
+                <div class="mt-2">
+                <span><b>Stock: </b></span>
                 @foreach($quantities as $stock)
                     <label for="">{{ $stock . "+" }}</label>
                 <input type="radio" name="stock" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
                 @endforeach
-                    <span x-data="{ open: false }">
-                    <input type="radio" name="stock" @click.away="open = false" @click="open = !open" >Otro</button>
+                    <span x-data="{ open: false }" @click.away="open = false">
+                        <input type="radio" name="stock"  @click="open = !open" >Otro</button>
                         <span x-show="open">
-                    <input type="text"  class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
+                    <input type="text" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
                         </span>
                         </span>
-                </div>
-                <div>
-                    <label>
-                        Colores:
+                    <label class="ml-4"><b>
+                            Colores:
+                        </b>
                     </label>
-                        @foreach($colorsf as $color_id => $color_name)
+                    @foreach($colorsf as $color_id => $color_name)
                         <label for="">{{ __(ucfirst($color_name)) }}</label>
                         <input type="checkbox" name="color" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}">
-                        @endforeach
-                    <label>
+                    @endforeach
+                </div>
+                <div>
+                    <label><b>
                         Tallas:
+                        </b>
                     </label>
                     @foreach($sizesf as $size_id => $size_name)
                         <label for="">{{ $size_name }}</label>

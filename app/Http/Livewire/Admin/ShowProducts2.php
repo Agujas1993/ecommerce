@@ -56,7 +56,7 @@ class ShowProducts2 extends Component
         $this->subcategories = SubCategory::orderBy('name')->get();
         $this->brands = Brand::orderBy('name')->get();
         $this->colorsf = Color::pluck('name', 'id')->toArray();
-        $this->sizesf = Size::pluck('name', 'id')->toArray();
+        $this->sizesf = Size::pluck('name', 'id')->unique()->toArray();
     }
 
     public function updatingPerPage()
@@ -142,7 +142,10 @@ class ShowProducts2 extends Component
                 });
             })->when($this->selectedSizes, function($query) {
                 return $query->whereHas('sizes', function ($query) {
-                    return $query->where('sizes.id', $this->selectedSizes);
+                    return $query->whereHas('colors', function ($query){
+                        return $query->where('color_size.size_id', $this->selectedSizes)
+                            ->orWhere('products.id', 'sizes.product_id');
+                    });
                 });
             })->paginate($this->per_page);
 
