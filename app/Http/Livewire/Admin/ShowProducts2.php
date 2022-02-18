@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Size;
 use App\Models\Sortable;
 use App\Models\Subcategory;
+use App\ProductFilter;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -27,11 +28,11 @@ class ShowProducts2 extends Component
     public $selectedBrands = '';
     public $brands;
     public $subcategories;
-    public $selectedSubcategories = '';
+    public $subcategory = '';
     public $sortColumn = "id";
-    public $sortDirection = "asc";
-    public $selectedFromDate = "";
-    public $selectedToDate = "";
+    public $sortDirection = "desc";
+    public $from;
+    public $to;
     public $selectedMinPrice = "";
     public $selectedMaxPrice = "";
     public $quantities = [0,10,20,50];
@@ -41,6 +42,18 @@ class ShowProducts2 extends Component
     public $sizesf = "";
     public $selectedSizes = [];
     public $searchSize = "";
+    public $originalUrl;
+    public $order;
+
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'from' => ['except' => ''],
+        'to' => ['except' => ''],
+        'searchSize' => ['except' => ''],
+        'subcategory' => ['except' => '']
+
+    ];
 
     public function updatingSearch()
     {
@@ -62,6 +75,7 @@ class ShowProducts2 extends Component
         $this->brands = Brand::orderBy('name')->get();
         $this->colorsf = Color::pluck('name', 'id')->toArray();
         $this->sizesf = Size::pluck('name', 'id')->unique()->toArray();
+        $this->originalUrl = $request->url();
     }
 
     public function updatingPerPage()
@@ -85,12 +99,12 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
-    public function updatingSelectedFromDate()
+    public function updatingFrom()
     {
         $this->resetPage();
     }
 
-    public function updatingSelectedToDate()
+    public function updatingTo()
     {
         $this->resetPage();
     }
@@ -120,37 +134,34 @@ class ShowProducts2 extends Component
         return in_array($column, $this->selectedColumns);
     }
 
-    public function render()
+    public function changeOrder($order)
     {
-        $products = Product::orderBy($this->sortColumn, $this->sortDirection)->where('name', 'LIKE', "%{$this->search}%")
-            ->when($this->selectedSubcategories, function($query) {
-            return $query->where('subcategory_id', $this->selectedSubcategories);
-        })->when($this->selectedCategories, function($query) {
-                return $query->whereHas('subcategory', function ($query) {
-                    return $query->where('subcategories.category_id', $this->selectedCategories);
-                });
-            })->when($this->selectedBrands, function($query) {
-                return $query->where('brand_id', $this->selectedBrands);
-            })->when($this->selectedFromDate, function($query) {
-                return $query->where('created_at', '>=', $this->selectedFromDate);
-            })->when($this->selectedToDate, function($query) {
-                return $query->where('created_at', '<=', $this->selectedToDate);
-            })->when($this->selectedMinPrice, function($query) {
-                return $query->where('price', '>=', $this->selectedMinPrice);
-            })->when($this->selectedMaxPrice, function($query) {
-                return $query->where('price', '<=', $this->selectedMaxPrice);
-            })->when($this->selectedStock, function($query) {
-                return $query->where('quantity', '>=', $this->selectedStock);
-            })->when($this->selectedColors, function($query) {
-                return $query->whereHas('colors', function ($query) {
-                    return $query->where('colors.id', $this->selectedColors);
-                });
-            })->when($this->searchSize, function($query) {
-                return $query->whereHas('sizes', function ($query) {
-                    return $query->where('name', 'LIKE', "%{$this->searchSize}%");
-                });
-            })->paginate($this->per_page);
+        $this->order = $order;
+    }
 
-        return view('livewire.admin.show-products2', compact('products'))->layout('layouts.admin');
+    protected function getProducts(ProductFilter $productFilter)
+    {
+        $products = Product::query()->filterBy($productFilter, array_merge(
+                ['search' => $this->search,
+                    'from' =>  $this->from,
+                    'to' =>  $this->to,
+                    'searchSize' => $this->searchSize,
+                    'subcategory' => $this->subcategory,
+
+                ]
+            ))
+            ->orderBy($this->sortColumn, $this->sortDirection)
+            ->paginate($this->per_page);
+
+        $products->appends($productFilter->valid());
+
+        return $products;
+    }
+
+    public function render(ProductFilter $productFilter)
+    {
+
+        $sortable = new Sortable($this->originalUrl);
+        return view('livewire.admin.show-products2', ['products' => $this->getProducts($productFilter), 'sortable' => $sortable])->layout('layouts.admin');
     }
 }

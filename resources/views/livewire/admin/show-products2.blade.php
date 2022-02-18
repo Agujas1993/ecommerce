@@ -53,8 +53,8 @@
                             Subcategorías:
                         </b>
                     </label>
-                    <select wire:model="selectedSubcategories">
-                        <option value="" selected disabled>Seleccionar una subcategoría</option>
+                    <select wire:model="subcategory">
+                        <option value="all" selected disabled>Seleccionar una subcategoría</option>
                         @foreach($subcategories as $subcategory)
                         <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
                         @endforeach
@@ -76,12 +76,12 @@
                             Desde:
                         </b>
                     </label>
-                <input type="date"  wire:model="selectedFromDate"/>
+                <input type="text" id="from" wire:model="from"/>
                     <label class="ml-2"><b>
                             Hasta:
                         </b>
                     </label>
-                <input type="date" wire:model="selectedToDate"/>
+                <input type="text" id="to" wire:model="to"/>
                     <label class="ml-2"><b>
                             Precio:
                         </b>
