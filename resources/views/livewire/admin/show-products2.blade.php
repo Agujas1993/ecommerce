@@ -30,6 +30,10 @@
             <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Filtros</button></b>
             <div x-show="open">
                 <div class="px-6 py-4">
+                    <label class="ml-4"><b>
+                            Producto:
+                        </b>
+                    </label>
                     <x-jet-input class="w-96"
                                  wire:model="search"
                                  type="text"
@@ -86,7 +90,7 @@
                     <input type="text" size="10" placeholder="Precio máximo" wire:model="selectedMaxPrice"/>
                 </div>
                 <div class="mt-2">
-                <span><b>Stock: </b></span>
+                <span class="ml-2"><b>Stock: </b></span>
                 @foreach($quantities as $stock)
                     <label for="">{{ $stock . "+" }}</label>
                 <input type="radio" name="stock" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
@@ -105,25 +109,23 @@
                         <label for="">{{ __(ucfirst($color_name)) }}</label>
                         <input type="checkbox" name="color" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}">
                     @endforeach
-                </div>
-                <div>
-                    <label><b>
-                        Tallas:
+                    <label class="ml-4"><b>
+                            Tallas:
                         </b>
                     </label>
-                    @foreach($sizesf as $size_id => $size_name)
-                        <label for="">{{ $size_name }}</label>
-                            <input type="checkbox" name="size" class="mr-2" wire:model="selectedSizes" value="{{ $size_id }}">
-                    @endforeach
+                    <x-jet-input class="w-96"
+                                 wire:model="searchSize"
+                                 type="text"
+                                 placeholder="Introduzca el nombre de la talla a buscar" />
+
                 </div>
-            </div>
         </div>
         @if($products->count())
             <table class="min-w-full divide-y divide-gray-200 overflow-x-auto block whitespace-nowrap">
                 <thead class="bg-gray-50">
                 <tr>
                     @if($this->showColumn('Id'))
-                        <th scope="col" wire:click="sort('id')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" wire:click="sort('products.id')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                            <button>ID</button>
                         </th>
                     @endif
@@ -184,7 +186,7 @@
                     </th>
                         @endif
                         @if($this->showColumn('Tallas'))
-                    <th scope="col" wire:click="sort('')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" wire:click="sort('sizes.id')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>TALLAS</button>
                     </th>
                         @endif

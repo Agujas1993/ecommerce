@@ -40,9 +40,14 @@ class ShowProducts2 extends Component
     public $selectedColors = [];
     public $sizesf = "";
     public $selectedSizes = [];
-
+    public $searchSize = "";
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSearchSize()
     {
         $this->resetPage();
     }
@@ -140,12 +145,9 @@ class ShowProducts2 extends Component
                 return $query->whereHas('colors', function ($query) {
                     return $query->where('colors.id', $this->selectedColors);
                 });
-            })->when($this->selectedSizes, function($query) {
+            })->when($this->searchSize, function($query) {
                 return $query->whereHas('sizes', function ($query) {
-                    return $query->whereHas('colors', function ($query){
-                        return $query->where('color_size.size_id', $this->selectedSizes)
-                            ->orWhere('products.id', 'sizes.product_id');
-                    });
+                    return $query->where('name', 'LIKE', "%{$this->searchSize}%");
                 });
             })->paginate($this->per_page);
 
