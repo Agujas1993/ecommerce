@@ -36,6 +36,11 @@ class ShowProducts2 extends Component
     public $selectedMaxPrice = "";
     public $quantities = [0,10,20,50];
     public $selectedStock = "";
+    public $colorsf = "";
+    public $selectedColors = [];
+    public $sizesf = "";
+    public $selectedSizes = [];
+
 
     public function updatingSearch()
     {
@@ -50,9 +55,16 @@ class ShowProducts2 extends Component
         $this->categories = Category::orderBy('name')->get();
         $this->subcategories = SubCategory::orderBy('name')->get();
         $this->brands = Brand::orderBy('name')->get();
+        $this->colorsf = Color::pluck('name', 'id')->toArray();
+        $this->sizesf = Size::pluck('name', 'id')->toArray();
     }
 
     public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedColors()
     {
         $this->resetPage();
     }
@@ -108,7 +120,11 @@ class ShowProducts2 extends Component
         $products = Product::orderBy($this->sortColumn, $this->sortDirection)->where('name', 'LIKE', "%{$this->search}%")
             ->when($this->selectedSubcategories, function($query) {
             return $query->where('subcategory_id', $this->selectedSubcategories);
-        })->when($this->selectedBrands, function($query) {
+        })->when($this->selectedCategories, function($query) {
+                return $query->whereHas('subcategory', function ($query) {
+                    return $query->where('subcategories.category_id', $this->selectedCategories);
+                });
+            })->when($this->selectedBrands, function($query) {
                 return $query->where('brand_id', $this->selectedBrands);
             })->when($this->selectedFromDate, function($query) {
                 return $query->where('created_at', '>=', $this->selectedFromDate);
@@ -120,6 +136,14 @@ class ShowProducts2 extends Component
                 return $query->where('price', '<=', $this->selectedMaxPrice);
             })->when($this->selectedStock, function($query) {
                 return $query->where('quantity', '>=', $this->selectedStock);
+            })->when($this->selectedColors, function($query) {
+                return $query->whereHas('colors', function ($query) {
+                    return $query->where('colors.id', $this->selectedColors);
+                });
+            })->when($this->selectedSizes, function($query) {
+                return $query->whereHas('sizes', function ($query) {
+                    return $query->where('sizes.id', $this->selectedSizes);
+                });
             })->paginate($this->per_page);
 
         return view('livewire.admin.show-products2', compact('products'))->layout('layouts.admin');

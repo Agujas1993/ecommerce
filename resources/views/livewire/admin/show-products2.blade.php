@@ -92,6 +92,22 @@
                         </span>
                         </span>
                 </div>
+                <div>
+                    <label>
+                        Colores:
+                    </label>
+                        @foreach($colorsf as $color_id => $color_name)
+                        <label for="">{{ __(ucfirst($color_name)) }}</label>
+                        <input type="checkbox" name="color" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}">
+                        @endforeach
+                    <label>
+                        Tallas:
+                    </label>
+                    @foreach($sizesf as $size_id => $size_name)
+                        <label for="">{{ $size_name }}</label>
+                            <input type="checkbox" name="size" class="mr-2" wire:model="selectedSizes" value="{{ $size_id }}">
+                    @endforeach
+                </div>
             </div>
         </div>
         @if($products->count())
