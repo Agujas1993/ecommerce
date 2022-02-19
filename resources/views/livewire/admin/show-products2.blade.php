@@ -77,11 +77,12 @@
                         </b>
                     </label>
 
-
+<div class="inline-block" wire:ignore>
                     <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from">
 
                     <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to">
-
+</div>
+                    {{--<button @click="flatpickr('.dateFlatpicker')[0].clear();flatpickr('.dateFlatpicker')[1].clear();" title="clear" data-clear>Limpiar</button>--}}
                     <label class="ml-2"><b>
                             Precio:
                         </b>
@@ -105,12 +106,12 @@
                             Colores:
                         </b>
                     </label>
-
+<div class="inline-block"  wire:ignore>
                     @foreach($colorsf as $color_id => $color_name)
-                        <label for="">{{ __(ucfirst($color_name)) }}</label>
-                        <input type="checkbox" name="selectedColors[]" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}"
-                            {{ in_array($color_id, $selectedColors) ? 'checked' : '' }}>
+                        <label for="color_{{ $color_id }}">{{ __(ucfirst($color_name)) }}</label>
+                        <input type="checkbox" id="color_{{ $color_id }}" name="selectedColors[]" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}"/>
                     @endforeach
+</div>
                     <label class="ml-4"><b>
                             Tallas:
                         </b>
@@ -119,7 +120,7 @@
                                  wire:model="searchSize"
                                  type="text"
                                  placeholder="Introduzca el nombre de la talla a buscar" />
-
+                </div>
                 </div>
         </div>
         @if($products->count())
@@ -319,6 +320,7 @@
                     altFormat: 'd/m/Y',
                     time_24hr: true,
                     allowInput: true,
+
                 });
             });
         </script>

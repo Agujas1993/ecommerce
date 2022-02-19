@@ -21,6 +21,7 @@ class ProductFilter extends QueryFilter
             'minPrice' => 'numeric',
             'maxPrice' => 'numeric',
             'stock' => 'numeric',
+            'selectedColors' => 'array|exists:colors,id'
 
 
 
@@ -79,11 +80,14 @@ class ProductFilter extends QueryFilter
 
     public function selectedColors($query, $selectedColors)
     {
-        $query->where(function($query) use ($selectedColors) {
-             $query->whereHas('colors', function ($query) use ($selectedColors) {
-                 $query->where('colors.id', $selectedColors);
-            });
-        });
+        $subquery = DB::table('color_product AS s')
+            ->selectRaw('COUNT(s.id)')
+            ->whereColumn('s.product_id', 'products.id')
+            ->whereIn('color_id', $selectedColors);
+
+        $query->addBinding($subquery->getBindings());
+
+        $query->where(DB::raw("({$subquery->toSql()})"), count($selectedColors));
     }
 
 
