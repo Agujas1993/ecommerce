@@ -29,6 +29,9 @@
         <div x-data="{ open: false }">
             <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Filtros</button></b>
             <div x-show="open">
+<div class="mt-4" wire:ignore>
+    <a class="button form-control bg-red-500 p-2" href="{{ request()->url() }}">Limpiar filtros</a>
+</div>
                 <div class="pl-2 py-4">
                     <label><b>
                             Producto:
@@ -78,6 +81,7 @@
                     </label>
 
 <div class="inline-block" wire:ignore>
+
                     <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from">
 
                     <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to">
