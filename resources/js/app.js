@@ -32,3 +32,7 @@ import 'glider-js/glider.min'
 window.$ = window.jQuery = require('jquery');
 import 'flexslider/jquery.flexslider-min'
 import 'flexslider/flexslider.css';
+var flatpickr = require("flatpickr");
+require("flatpickr/dist/flatpickr.min.css");
+
+

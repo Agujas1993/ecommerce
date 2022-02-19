@@ -12,10 +12,16 @@ class ProductFilter extends QueryFilter
     {
         return [
             'search' => 'filled',
-            'from' => 'date_format:Y/m/d',
-            'to' => 'date_format:Y/m/d',
+            'from' => 'date_format:d/m/Y',
+            'to' => 'date_format:d/m/Y',
             'searchSize' => 'filled',
-            'subcategory' => 'exists:subcategories,id'
+            'subcategory' => 'exists:subcategories,id',
+            'category' => 'exists:categories,id',
+            'brand' => 'exists:brands,id',
+            'minPrice' => 'numeric',
+            'maxPrice' => 'numeric',
+            'stock' => 'numeric',
+
 
 
         ];
@@ -42,6 +48,45 @@ class ProductFilter extends QueryFilter
         return $query->where('subcategory_id', $subcategory);
     }
 
+    public function category($query, $category)
+    {
+        return $query->where(function($query) use ($category){
+            return $query->whereHas('subcategory', function ($query) use ($category){
+                return $query->where('subcategories.category_id', $category);
+        });
+        });
+    }
+
+    public function brand($query, $brand)
+    {
+        return $query->where('brand_id',$brand);
+    }
+
+    public function minPrice($query, $price)
+    {
+        return $query->where('price', '>=', $price);
+    }
+
+    public function maxPrice($query, $price)
+    {
+        return $query->where('price', '<=', $price);
+    }
+
+    public function stock($query, $stock)
+    {
+        return $query->where('quantity', '>=', $stock);
+    }
+
+    public function selectedColors($query, $selectedColors)
+    {
+        $query->where(function($query) use ($selectedColors) {
+             $query->whereHas('colors', function ($query) use ($selectedColors) {
+                 $query->where('colors.id', $selectedColors);
+            });
+        });
+    }
+
+
 
     public function skills($query, $skills)
     {
@@ -57,14 +102,14 @@ class ProductFilter extends QueryFilter
 
     public function from($query, $date)
     {
-        $date = Carbon::createFromFormat('Y/m/d', $date);
+        $date = Carbon::createFromFormat('d/m/Y', $date);
 
         $query->whereDate('created_at', '>=', $date);
     }
 
     public function to($query, $date)
     {
-        $date = Carbon::createFromFormat('Y/m/d', $date);
+        $date = Carbon::createFromFormat('d/m/Y', $date);
 
         $query->whereDate('created_at', '<=', $date);
     }

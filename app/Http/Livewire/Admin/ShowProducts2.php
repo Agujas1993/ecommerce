@@ -23,24 +23,22 @@ class ShowProducts2 extends Component
     public $per_page = 15;
     public $columns = ['Id','Nombre', 'Slug', 'Descripción','Categoría','Estado','Stock','Precio','Subcategoría','Marca','Fecha creación','Colores', 'Tallas'];
     public $selectedColumns = [];
-    public $selectedCategories = '';
+    public $category = 'all';
     public $categories;
-    public $selectedBrands = '';
+    public $brand = 'all';
     public $brands;
     public $subcategories;
-    public $subcategory = '';
+    public $subcategory = "all";
     public $sortColumn = "id";
     public $sortDirection = "desc";
     public $from;
     public $to;
-    public $selectedMinPrice = "";
-    public $selectedMaxPrice = "";
+    public $minPrice;
+    public $maxPrice;
     public $quantities = [0,10,20,50];
-    public $selectedStock = "";
+    public $stock;
     public $colorsf = "";
     public $selectedColors = [];
-    public $sizesf = "";
-    public $selectedSizes = [];
     public $searchSize = "";
     public $originalUrl;
     public $order;
@@ -51,11 +49,27 @@ class ShowProducts2 extends Component
         'from' => ['except' => ''],
         'to' => ['except' => ''],
         'searchSize' => ['except' => ''],
-        'subcategory' => ['except' => '']
+        'subcategory' => ['except' => 'all'],
+        'category' => ['except' => 'all'],
+        'brand' => ['except' => 'all'],
+        'minPrice' => ['except' => ''],
+        'maxPrice' => ['except' => ''],
+        'stock' => ['except' => '0'],
+        'selectedColors' => [],
 
     ];
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingTo()
     {
         $this->resetPage();
     }
@@ -74,7 +88,6 @@ class ShowProducts2 extends Component
         $this->subcategories = SubCategory::orderBy('name')->get();
         $this->brands = Brand::orderBy('name')->get();
         $this->colorsf = Color::pluck('name', 'id')->toArray();
-        $this->sizesf = Size::pluck('name', 'id')->unique()->toArray();
         $this->originalUrl = $request->url();
     }
 
@@ -99,15 +112,7 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
-    public function updatingFrom()
-    {
-        $this->resetPage();
-    }
 
-    public function updatingTo()
-    {
-        $this->resetPage();
-    }
 
     public function updatingSelectedCategories()
     {
@@ -147,6 +152,12 @@ class ShowProducts2 extends Component
                     'to' =>  $this->to,
                     'searchSize' => $this->searchSize,
                     'subcategory' => $this->subcategory,
+                    'category' => $this->category,
+                    'brand' => $this->brand,
+                    'minPrice' => $this->minPrice,
+                    'maxPrice' => $this->maxPrice,
+                    'stock' => $this->stock,
+                    'selectedColors' => $this->selectedColors,
 
                 ]
             ))
@@ -162,6 +173,6 @@ class ShowProducts2 extends Component
     {
 
         $sortable = new Sortable($this->originalUrl);
-        return view('livewire.admin.show-products2', ['products' => $this->getProducts($productFilter), 'sortable' => $sortable])->layout('layouts.admin');
+        return view('livewire.admin.show-products2', ['products' => $this->getProducts($productFilter), 'sortable' => $sortable,'selectedColors' => collect(request('selectedColors'))])->layout('layouts.admin');
     }
 }

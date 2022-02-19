@@ -24,9 +24,13 @@
         "@ckeditor/ckeditor5-build-classic": "^31.1.0",
         "@fortawesome/fontawesome-free": "^6.0.0",
         "dropzone": "^5.9.3",
+        "flatpickr": "^4.6.9",
         "flexslider": "^2.7.2",
+        "gijgo": "^1.9.13",
         "glider-js": "^1.7.7",
         "jquery": "^3.6.0",
+        "moment": "^2.29.1",
+        "pikaday": "^1.8.2",
         "sweetalert2": "^11.3.10"
     }
 }

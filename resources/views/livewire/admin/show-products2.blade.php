@@ -29,8 +29,8 @@
         <div x-data="{ open: false }">
             <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Filtros</button></b>
             <div x-show="open">
-                <div class="px-6 py-4">
-                    <label class="ml-4"><b>
+                <div class="pl-2 py-4">
+                    <label><b>
                             Producto:
                         </b>
                     </label>
@@ -42,14 +42,14 @@
                             Categoría:
                         </b>
                     </label>
-                    <select wire:model="selectedCategories">
-                        <option value="" selected disabled>Seleccionar una Categoría</option>
+                    <select wire:model="category">
+                        <option value="all" selected disabled>Seleccionar una Categoría</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
 
-                    <label class="ml-2"><b>
+                    <label class="mx-2"><b>
                             Subcategorías:
                         </b>
                     </label>
@@ -65,49 +65,51 @@
                             Marcas:
                         </b>
                     </label>
-                <select wire:model="selectedBrands">
-                    <option value="" selected disabled>Seleccionar una marca</option>
+                <select wire:model="brand">
+                    <option value="all" selected disabled>Seleccionar una marca</option>
                     @foreach($brands as $brand)
                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                     @endforeach
                 </select>
 
                     <label class="ml-2"><b>
-                            Desde:
+                            Fechas:
                         </b>
                     </label>
-                <input type="text" id="from" wire:model="from"/>
-                    <label class="ml-2"><b>
-                            Hasta:
-                        </b>
-                    </label>
-                <input type="text" id="to" wire:model="to"/>
+
+
+                    <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from">
+
+                    <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to">
+
                     <label class="ml-2"><b>
                             Precio:
                         </b>
                     </label>
-                    <input type="text" size="10" placeholder="Precio mínimo" wire:model="selectedMinPrice"/>
-                    <input type="text" size="10" placeholder="Precio máximo" wire:model="selectedMaxPrice"/>
+                    <input type="text" size="10" placeholder="Precio mínimo" wire:model="minPrice"/>
+                    <input type="text" size="10" placeholder="Precio máximo" wire:model="maxPrice"/>
                 </div>
                 <div class="mt-2">
                 <span class="ml-2"><b>Stock: </b></span>
                 @foreach($quantities as $stock)
                     <label for="">{{ $stock . "+" }}</label>
-                <input type="radio" name="stock" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
+                <input type="radio" name="stock" class="mr-2" wire:model="stock" value="{{ $stock }}">
                 @endforeach
                     <span x-data="{ open: false }" @click.away="open = false">
                         <input type="radio" name="stock"  @click="open = !open" >Otro</button>
                         <span x-show="open">
-                    <input type="text" class="mr-2" wire:model="selectedStock" value="{{ $stock }}">
+                    <input type="text" class="mr-2" wire:model="stock" value="{{ $stock }}">
                         </span>
                         </span>
                     <label class="ml-4"><b>
                             Colores:
                         </b>
                     </label>
+
                     @foreach($colorsf as $color_id => $color_name)
                         <label for="">{{ __(ucfirst($color_name)) }}</label>
-                        <input type="checkbox" name="color" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}">
+                        <input type="checkbox" name="selectedColors[]" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}"
+                            {{ in_array($color_id, $selectedColors) ? 'checked' : '' }}>
                     @endforeach
                     <label class="ml-4"><b>
                             Tallas:
@@ -240,10 +242,10 @@
                             @if($this->showColumn('Stock'))
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    @if($product->quantity !== null)
-                                    {{ $product->quantity }}
+                                    @if($product->getStockAttribute() !== 0)
+                                    {{ $product->getStockAttribute() }}
                                     @else
-                                        Tiene color y/o talla
+                                        Sin stock
                                     @endif
                                 </td>
                             @endif
@@ -297,7 +299,7 @@
                 </tbody>
             </table>
         @else
-            <div class="px-6 py-4">
+            <div class="px-4 py-2">
                 No existen productos coincidentes
             </div>
         @endif
@@ -307,7 +309,23 @@
             </div>
         @endif
     </x-table-responsive>
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                flatpickr('.dateFlatpicker', {
+                    enableTime: false,
+                    dateFormat: 'd/m/Y',
+                    altInput: true,
+                    altFormat: 'd/m/Y',
+                    time_24hr: true,
+                    allowInput: true,
+                });
+            });
+        </script>
+    @endpush
 </div>
-</div>
-</div>
-</div>
+
+
+
+
+

@@ -1,6 +1,7 @@
 @import 'dropzone/dist/dropzone.css';
 @import 'sweetalert2/dist/sweetalert2.css';
 @import 'glider-js/glider.min.css';
+@import "flatpickr/dist/flatpickr.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
