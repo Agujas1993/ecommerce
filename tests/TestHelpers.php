@@ -11,6 +11,7 @@ use App\Models\Size;
 use App\Models\Subcategory;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 trait TestHelpers
 {
@@ -112,6 +113,17 @@ trait TestHelpers
             'email' => 'samuel@test.com',
             'password' => bcrypt('123'),
         ]);
+    }
+
+    public function createAdmin()
+    {
+        Role::create(['name' => 'admin']);
+
+        return User::factory()->create([
+            'name' => 'Samuel Garcia',
+            'email' => 'samuel@test.com',
+            'password' => bcrypt('123'),
+        ])->assignRole('admin');
     }
 
     public function createProduct()
@@ -246,5 +258,12 @@ trait TestHelpers
         $size->colors()->attach([1 => ['quantity' => 0]]);
 
         return $product;
+    }
+    public function assertDatabaseEmpty($table, $connection = null)
+    {
+        $total = $this->getConnection($connection)->table($table)->count();
+        $this->assertSame(0, $total, sprintf(
+            "Failed asserting the table [%s] is empty. %s %s found",$table, $total, Str::plural('row', $total)
+        ));
     }
 }
