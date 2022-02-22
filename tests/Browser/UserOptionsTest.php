@@ -25,10 +25,10 @@ class UserOptionsTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                 ->pause(100)
-                ->click('.fa-user-circle')
+                ->click('.fa-circle-user')
                 ->pause(100)
                 ->assertSeeIn('.rounded-md .ring-1','Login')
-                ->pause(100)
+                ->pause(500)
                 ->assertSeeIn('.rounded-md .ring-1','Registro')
                 ->screenshot('not-logged-test');
         });

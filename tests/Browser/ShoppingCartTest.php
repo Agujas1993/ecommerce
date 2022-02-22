@@ -252,7 +252,7 @@ class ShoppingCartTest extends DuskTestCase
                 ->click('div.px-3 > a.inline-flex')
                 ->assertSee($product->name)
                 ->pause(100)
-                ->click('i.fa-trash')
+                ->click('svg.fa-trash')
                 ->pause(100)
                 ->assertSee("TU CARRITO DE COMPRAS ESTÁ VACÍO")
                 ->pause(100)
