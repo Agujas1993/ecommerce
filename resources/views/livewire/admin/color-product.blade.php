@@ -7,24 +7,24 @@
             <div class="grid grid-cols-6 gap-6">
                 @foreach ($colors as $color)
                     <label>
-                        <input type="radio" name="color_id" wire:model.defer="color_id" value="{{ $color->id }}">
+                        <input type="radio" class="colorProduct" name="color_id" wire:model.defer="color_id" value="{{ $color->id }}">
                         <span class="ml-2 text-gray-700 capitalize">
 {{ __(ucfirst($color->name)) }}
 </span>
                     </label>
                 @endforeach
             </div>
-            <x-jet-input-error for="color_id" />
+            <x-jet-input-error for="color_id" id="errorColor"/>
         </div>
         <div>
             <x-jet-label>
                 Cantidad
             </x-jet-label>
-            <x-jet-input type="number" wire:model.defer="quantity" placeholder="Ingrese una cantidad" class="w-full" />
-            <x-jet-input-error for="quantity" />
+            <x-jet-input type="number" wire:model.defer="quantity" placeholder="Ingrese una cantidad" class="w-full quantityColor" />
+            <x-jet-input-error for="quantity" id="errorQuantity" />
         </div>
         <div class="flex justify-end items-center mt-4">
-        <x-jet-action-message class="mr-3" on="saved">
+        <x-jet-action-message class="mr-3" on="saved" id="agregado">
             Agregado
         </x-jet-action-message>
         <x-jet-button wire:loading.attr="disabled" wire:target="save" wire:click="save">

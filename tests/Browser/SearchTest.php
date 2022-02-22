@@ -20,6 +20,7 @@ class SearchTest extends DuskTestCase
     public function it_searchs_by_product_name()
     {
         $product = $this->createProduct();
+        $this->createProducts(3);
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/')

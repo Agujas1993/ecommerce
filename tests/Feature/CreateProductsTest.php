@@ -28,6 +28,21 @@ class CreateProductsTest extends TestCase
     }
 
     /** @test */
+    public function users_cant_create_products()
+    {
+        $user = $this->createUser();
+        $this->actingAs($user)->get('admin/products/create')
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function it_redirects_to_login_when_trying_to_create_a_product()
+    {
+        $this->get('admin/products/create')
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
     public function it_creates_a_product()
     {
         $category = $this->createCategory();

@@ -4,12 +4,12 @@
             <x-jet-label>
                 Talla
             </x-jet-label>
-            <x-jet-input
+            <x-jet-input id="talla"
                 wire:model="name"
                 type="text"
                 placeholder="Introduzca una talla"
                 class="w-full"/>
-            <x-jet-input-error for="name" />
+            <x-jet-input-error for="name" id="errorSize"/>
         </div>
         <div class="flex justify-end items-center mt-4">
             <x-jet-button wire:click="save" wire:loading.attr="disabled" wire:target="save">
@@ -44,7 +44,7 @@
             <x-jet-label>
                 Talla
             </x-jet-label>
-            <x-jet-input wire:model="name_edit" type="text" class="w-full" />
+            <x-jet-input wire:model="name_edit" type="text" class="w-full " />
             <x-jet-input-error for="name_edit" />
         </x-slot>
         <x-slot name="footer">
