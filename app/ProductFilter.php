@@ -22,16 +22,13 @@ class ProductFilter extends QueryFilter
             'maxPrice' => 'numeric',
             'stock' => 'numeric',
             'selectedColors' => 'array|exists:colors,id'
-
-
-
         ];
     }
 
     public function search($query, $search)
     {
         return $query->where(function($query) use ($search) {
-            $query->where('name', 'LIKE', "%{$search}%");
+            $query->where('products.name', 'LIKE', "%{$search}%");
     });
     }
 
@@ -90,32 +87,18 @@ class ProductFilter extends QueryFilter
         $query->where(DB::raw("({$subquery->toSql()})"), count($selectedColors));
     }
 
-
-
-    public function skills($query, $skills)
-    {
-        $subquery = DB::table('skill_user AS s')
-            ->selectRaw('COUNT(s.id)')
-            ->whereColumn('s.user_id', 'users.id')
-            ->whereIn('skill_id', $skills);
-
-        $query->addBinding($subquery->getBindings());
-
-        $query->where(DB::raw("({$subquery->toSql()})"), count($skills));
-    }
-
     public function from($query, $date)
     {
         $date = Carbon::createFromFormat('d/m/Y', $date);
 
-        $query->whereDate('created_at', '>=', $date);
+        $query->whereDate('products.created_at', '>=', $date);
     }
 
     public function to($query, $date)
     {
         $date = Carbon::createFromFormat('d/m/Y', $date);
 
-        $query->whereDate('created_at', '<=', $date);
+        $query->whereDate('products.created_at', '<=', $date);
     }
 
 }

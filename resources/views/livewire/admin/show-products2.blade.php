@@ -82,9 +82,9 @@
 
 <div class="inline-block" wire:ignore>
 
-                    <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from">
+                    <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from" name="from" id="from">
 
-                    <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to">
+                    <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to" name="to" id="to">
 </div>
                     {{--<button @click="flatpickr('.dateFlatpicker')[0].clear();flatpickr('.dateFlatpicker')[1].clear();" title="clear" data-clear>Limpiar</button>--}}
                     <label class="ml-2"><b>
@@ -153,7 +153,7 @@
                             </th>
                         @endif
                         @if($this->showColumn('Categoría'))
-                    <th scope="col"  wire:click="sort('')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col"  wire:click="sort('categories.name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>CATEGORÍA</button>
                     </th>
                         @endif

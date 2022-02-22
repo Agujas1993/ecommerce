@@ -56,6 +56,7 @@ class Product extends Model
             return $this->quantity;
         }
     }
+
     public function newEloquentBuilder($query)
     {
         return new ProductQuery($query);

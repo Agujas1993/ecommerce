@@ -54,9 +54,10 @@ class ShowProducts2 extends Component
         'brand' => ['except' => 'all'],
         'minPrice' => ['except' => ''],
         'maxPrice' => ['except' => ''],
-        'stock' => ['except' => '0'],
+        'stock' => ['except' => ''],
         'selectedColors' => [],
-
+        'sortColumn' => [],
+        'sortDirection' => [],
     ];
 
     public function updatingSearch()
@@ -65,6 +66,11 @@ class ShowProducts2 extends Component
     }
 
     public function updatingFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingBrand()
     {
         $this->resetPage();
     }
@@ -96,7 +102,22 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
+    public function updatingSubcategory()
+    {
+        $this->resetPage();
+    }
+
     public function updatingSelectedColors()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortColumn()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortDirection()
     {
         $this->resetPage();
     }
@@ -112,24 +133,27 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
-
-
-    public function updatingSelectedCategories()
+    public function updatingCategory()
     {
         $this->resetPage();
     }
 
-    public function updatingSelectedMinPrice()
+    public function updatingMinPrice()
     {
         $this->resetPage();
     }
 
-    public function updatingSelectedMaxPrice()
+    public function updatingMaxPrice()
     {
         $this->resetPage();
     }
 
-    public function updatingSelectedStock()
+    public function updatingOrder()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStock()
     {
         $this->resetPage();
     }
@@ -160,7 +184,9 @@ class ShowProducts2 extends Component
                     'selectedColors' => $this->selectedColors,
 
                 ]
-            ))
+            ))->join('subcategories','subcategories.id','products.subcategory_id')
+                ->join('categories', 'subcategories.category_id', 'categories.id')
+            ->select('products.*')
             ->orderBy($this->sortColumn, $this->sortDirection)
             ->paginate($this->per_page);
 
