@@ -82,17 +82,19 @@
 
 <div class="inline-block" wire:ignore>
 
-                    <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from" name="from" id="from">
+                    <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from" name="from" id="from" data-date-format="d/m/Y">
 
-                    <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to" name="to" id="to">
+                    <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to" name="to" id="to" data-date-format="d/m/Y">
 </div>
-                    {{--<button @click="flatpickr('.dateFlatpicker')[0].clear();flatpickr('.dateFlatpicker')[1].clear();" title="clear" data-clear>Limpiar</button>--}}
+                    <div class="inline-block" wire:ignore>
+                    <button class="form-control bg-red-500 p-2" @click="flatpickr('.dateFlatpicker')[0].clear();flatpickr('.dateFlatpicker')[1].clear();" title="clear" >Limpiar</button>
+                    </div>
                     <label class="ml-2"><b>
                             Precio:
                         </b>
                     </label>
-                    <input type="text" size="10" placeholder="Precio mínimo" wire:model="minPrice"/>
-                    <input type="text" size="10" placeholder="Precio máximo" wire:model="maxPrice"/>
+                    <input type="text" size="9" placeholder="Precio mínimo" wire:model="minPrice"/>
+                    <input type="text" size="9" placeholder="Precio máximo" wire:model="maxPrice"/>
                 </div>
                 <div class="mt-2">
                 <span class="ml-2"><b>Stock: </b></span>
@@ -324,7 +326,6 @@
                     altFormat: 'd/m/Y',
                     time_24hr: true,
                     allowInput: true,
-
                 });
             });
         </script>

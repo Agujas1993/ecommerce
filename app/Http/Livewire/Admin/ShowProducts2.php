@@ -30,7 +30,7 @@ class ShowProducts2 extends Component
     public $subcategories;
     public $subcategory = "all";
     public $sortColumn = "id";
-    public $sortDirection = "desc";
+    public $sortDirection = "asc";
     public $from;
     public $to;
     public $minPrice;

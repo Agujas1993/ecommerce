@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Product;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -12,8 +13,8 @@ class ProductFilter extends QueryFilter
     {
         return [
             'search' => 'filled',
-            'from' => 'date_format:d/m/Y',
-            'to' => 'date_format:d/m/Y',
+            'from' => 'filled|date_format:d/m/Y',
+            'to' => 'filled|date_format:d/m/Y',
             'searchSize' => 'filled',
             'subcategory' => 'exists:subcategories,id',
             'category' => 'exists:categories,id',
@@ -72,7 +73,7 @@ class ProductFilter extends QueryFilter
 
     public function stock($query, $stock)
     {
-        return $query->where('quantity', '>=', $stock);
+        return $query->where(Product::getQuantities(), '>=', $stock);
     }
 
     public function selectedColors($query, $selectedColors)
