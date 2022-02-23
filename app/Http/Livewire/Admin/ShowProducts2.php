@@ -184,10 +184,17 @@ class ShowProducts2 extends Component
                     'selectedColors' => $this->selectedColors,
 
                 ]
-            ))->join('subcategories','subcategories.id','products.subcategory_id')
+            ))
+            ->join('subcategories','subcategories.id','products.subcategory_id')
                 ->join('categories', 'subcategories.category_id', 'categories.id')
-            ->select('products.*')
+            ->join('brand_category', 'brand_category.category_id', 'categories.id')
+            ->join('brands', 'brand_category.brand_id', 'brands.id')
+
+            ->select('brands.*')
+
+            ->groupBy('products.id')
             ->orderBy($this->sortColumn, $this->sortDirection)
+
             ->paginate($this->per_page);
 
         $products->appends($productFilter->valid());

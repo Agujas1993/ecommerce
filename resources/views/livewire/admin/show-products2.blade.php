@@ -38,14 +38,14 @@
                         </b>
                     </label>
                     <x-jet-input class="w-96"
-                                 wire:model="search"
+                                 wire:model.debounce.500ms="search"
                                  type="text"
                                  placeholder="Introduzca el nombre del producto a buscar" />
                     <label class="ml-2"><b>
                             Categoría:
                         </b>
                     </label>
-                    <select wire:model="category">
+                    <select wire:model.lazy="category">
                         <option value="all" selected disabled>Seleccionar una Categoría</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -56,7 +56,7 @@
                             Subcategorías:
                         </b>
                     </label>
-                    <select wire:model="subcategory">
+                    <select wire:model.lazy="subcategory">
                         <option value="all" selected disabled>Seleccionar una subcategoría</option>
                         @foreach($subcategories as $subcategory)
                         <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
@@ -68,7 +68,7 @@
                             Marcas:
                         </b>
                     </label>
-                <select wire:model="brand">
+                <select wire:model.lazy="brand">
                     <option value="all" selected disabled>Seleccionar una marca</option>
                     @foreach($brands as $brand)
                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -122,10 +122,10 @@
                             Tallas:
                         </b>
                     </label>
-                    <x-jet-input class="w-96"
+                    <x-jet-input class="w-64"
                                  wire:model="searchSize"
                                  type="text"
-                                 placeholder="Introduzca el nombre de la talla a buscar" />
+                                 placeholder="Introduzca la talla a buscar" />
                 </div>
                 </div>
         </div>
@@ -140,12 +140,12 @@
                     @endif
 
                     @if($this->showColumn('Nombre'))
-                    <th scope="col" wire:click="sort('name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" wire:click="sort('products.name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>NOMBRE</button>
                     </th>
                     @endif
                         @if($this->showColumn('Slug'))
-                            <th scope="col" wire:click="sort('slug')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" wire:click="sort('products.slug')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <button>SLUG</button>
                             </th>
                         @endif
@@ -165,7 +165,7 @@
                     </th>
                         @endif
                         @if($this->showColumn('Stock'))
-                            <th scope="col" wire:click="sort('quantity')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" wire:click="sort('sizes.name')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <button>STOCK</button>
                             </th>
                         @endif
@@ -175,12 +175,12 @@
                     </th>
                         @endif
                         @if($this->showColumn('Subcategoría'))
-                    <th scope="col" wire:click="sort('subcategory_id')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" wire:click="sort('subcategories.name')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>SUBCATEGORÍA</button>
                     </th>
                         @endif
                         @if($this->showColumn('Marca'))
-                    <th scope="col" wire:click="sort('brand_id')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" wire:click="sort('brands.name')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>MARCA</button>
                     </th>
                         @endif
@@ -190,12 +190,12 @@
                     </th>
                         @endif
                         @if($this->showColumn('Colores'))
-                    <th scope="col" wire:click="sort('colors')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" wire:click="sort('colors.name')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>COLORES</button>
                     </th>
                         @endif
                         @if($this->showColumn('Tallas'))
-                    <th scope="col" wire:click="sort('sizes.id')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" wire:click="sort('sizes.name')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <button>TALLAS</button>
                     </th>
                         @endif
