@@ -187,12 +187,9 @@ class ShowProducts2 extends Component
             ))
             ->join('subcategories','subcategories.id','products.subcategory_id')
                 ->join('categories', 'subcategories.category_id', 'categories.id')
-            ->join('brand_category', 'brand_category.category_id', 'categories.id')
-            ->join('brands', 'brand_category.brand_id', 'brands.id')
-
-            ->select('brands.*')
-
-            ->groupBy('products.id')
+            ->join('brands', 'products.brand_id', 'brands.id')
+            ->join()
+            ->select('products.*')
             ->orderBy($this->sortColumn, $this->sortDirection)
 
             ->paginate($this->per_page);
