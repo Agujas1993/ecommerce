@@ -59,7 +59,17 @@ class Product extends Model
 
     public static function getQuantities()
     {
-        $products = Product::withSum('colors', 'sizes')->get()->toArray();
+        $products = Product::with('colors')->get();
+        foreach ($products as $product) {
+            foreach ($product->colors as $color){
+                $product->quantity += $color->pivot->quantity;
+                foreach ($product->sizes as $size){
+                    foreach ($size->colors as $sizeColor)
+                    $product->quantity += $sizeColor->pivot->quantity;
+                }
+            }
+        }
+
         return $products;
     }
 

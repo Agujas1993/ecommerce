@@ -188,7 +188,7 @@ class ShowProducts2 extends Component
             ->join('subcategories','subcategories.id','products.subcategory_id')
                 ->join('categories', 'subcategories.category_id', 'categories.id')
             ->join('brands', 'products.brand_id', 'brands.id')
-            ->join()
+
             ->select('products.*')
             ->orderBy($this->sortColumn, $this->sortDirection)
 

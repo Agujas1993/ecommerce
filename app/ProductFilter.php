@@ -74,6 +74,7 @@ class ProductFilter extends QueryFilter
     public function stock($query, $stock)
     {
         return $query->where(Product::getQuantities(), '>=', $stock);
+
     }
 
     public function selectedColors($query, $selectedColors)
