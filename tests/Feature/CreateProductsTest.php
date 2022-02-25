@@ -6,7 +6,6 @@ use App\Http\Livewire\Admin\CreateProduct;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 use Tests\TestHelpers;

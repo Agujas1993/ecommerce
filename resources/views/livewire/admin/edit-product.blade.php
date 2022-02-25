@@ -127,7 +127,8 @@ console.error( error );
             <x-jet-input id="quantity"
                 wire:model="product.quantity"
                 type="number"
-                class="w-full" />
+                class="w-full quantity"
+                name="quantity"/>
             <x-jet-input-error for="product.quantity" class="quantityError" />
         </div>
     @endif

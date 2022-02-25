@@ -441,6 +441,7 @@ class EditProductsTest extends DuskTestCase
         $subcategory = $this->createCustomSubcategory($category->id,'tvs');
         $brand = $category->brands()->create(['name' => 'Xiaomi']);
         $product = $this->createProduct();
+        $product->quantity = ' ';
 
         $this->browse(function (Browser $browser) use($user, $product, $category, $subcategory, $brand) {
 
@@ -450,13 +451,16 @@ class EditProductsTest extends DuskTestCase
                 ->type('.name', 'sa')
                 ->pause(100)
                 ->select('subcategory', $subcategory->id)
+                ->pause(100)
                 ->select('brand', $brand->id)
-                ->value('.description', 'dsdsajdoasdj',)
-                ->value('#price', '110',)
-                ->value('#quantity', 'aSASA',)
+                ->pause(100)
+                ->click('input.quantity')
+                ->pause(100)
+                ->clear('quantity')
+                ->pause(100)
                 ->press('ACTUALIZAR PRODUCTO')
                 ->pause(100)
-                ->assertSeeIn('.quantityError','El campo quantity es obligatorio.')
+               ->assertSee('Cantidad')
                 ->screenshot('theQuantityIsRequired-test');
         });
     }
