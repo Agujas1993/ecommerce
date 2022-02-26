@@ -42,6 +42,7 @@ class ShowProducts2 extends Component
     public $searchSize = "";
     public $originalUrl;
     public $order;
+    public $status;
 
 
     protected $queryString = [
@@ -58,6 +59,7 @@ class ShowProducts2 extends Component
         'selectedColors' => [],
         'sortColumn' => [],
         'sortDirection' => [],
+        'status' => ['except' => '']
     ];
 
     public function updatingSearch()
@@ -182,6 +184,7 @@ class ShowProducts2 extends Component
                     'maxPrice' => $this->maxPrice,
                     'stock' => $this->stock,
                     'selectedColors' => $this->selectedColors,
+                    'status' => $this->status,
 
                 ]
             ))

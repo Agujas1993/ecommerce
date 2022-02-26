@@ -22,7 +22,8 @@ class ProductFilter extends QueryFilter
             'minPrice' => 'numeric',
             'maxPrice' => 'numeric',
             'stock' => 'numeric',
-            'selectedColors' => 'array|exists:colors,id'
+            'selectedColors' => 'array|exists:colors,id',
+            'status' => 'in:1,2'
         ];
     }
 
@@ -76,6 +77,12 @@ class ProductFilter extends QueryFilter
         return $query->where(Product::getQuantities(), '>=', $stock);
 
     }
+
+    public function status($query, $status)
+    {
+        return $query->where('status',  $status);
+    }
+
 
     public function selectedColors($query, $selectedColors)
     {

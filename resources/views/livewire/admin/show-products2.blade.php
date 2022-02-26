@@ -126,6 +126,15 @@
                                  wire:model="searchSize"
                                  type="text"
                                  placeholder="Introduzca la talla a buscar" />
+                    <label><b>
+                        Estado
+                        </b>
+                    </label>
+                    <select wire:model="status">
+                        <option value="all">Cualquiera</option>
+                        <option value="1">Borrador</option>
+                        <option value="2">Publicado</option>
+                    </select>
                 </div>
                 </div>
         </div>

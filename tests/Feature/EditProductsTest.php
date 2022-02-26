@@ -185,6 +185,33 @@ class EditProductsTest extends TestCase
     }
 
     /** @test */
+    public function the_slug_is_unique()
+    {
+        $this->createProduct();
+        $category = $this->createCustomCategory('Tv y audio');
+        $subcategory = $this->createCustomSubcategory($category->id, 'Tvs');
+        $brand = $category->brands()->create(['name' => 'LG']);
+        $product = $this->createCustomProduct('Cascos LG', $subcategory, $brand, '2');
+
+
+        Livewire::test(EditProduct::class, ['product' => $product])
+            ->set('category_id', $category->id)
+            ->set('product.name', 'TV LG')
+            ->set('product.slug', 'tablet-lg2080')
+            ->set('product.subcategory_id', $subcategory->id)
+            ->set('product.brand_id', $brand->id)
+            ->set('product.description', 'Tv LG',)
+            ->set('product.price', '418.99',)
+            ->set('product.quantity', '20',)
+            ->call('save')
+            ->assertHasErrors(['product.slug']);
+        $this->assertDatabaseHas('products', ['name' => $product->name, 'slug' => $product->slug,
+            'subcategory_id' => $product->subcategory->id, 'brand_id' => $product->brand->id,
+            'description' => $product->description,
+            'price' => $product->price, 'quantity' => $product->quantity]);
+    }
+
+    /** @test */
     public function the_description_is_required()
     {
         $product = $this->createProduct();

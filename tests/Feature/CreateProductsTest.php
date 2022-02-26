@@ -125,6 +125,28 @@ class CreateProductsTest extends TestCase
     }
 
     /** @test */
+    public function the_slug_is_unique()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createCustomSubcategory($category->id,'celulares');
+        $brand = $category->brands()->create(['name' => 'LG']);
+        $this->createProduct();
+
+        Livewire::test(CreateProduct::class)
+            ->set('category_id', $category->id)
+            ->set('name', 'Tablet')
+            ->set('slug', 'tablet-lg2080')
+            ->set('subcategory_id',$subcategory->id)
+            ->set('brand_id', $brand->id)
+            ->set('description','dsdsajdoasdj',)
+            ->set('price', '118.99',)
+            ->set('quantity', '20',)
+            ->call('save')
+            ->assertHasErrors(['slug']);
+        $this->assertEquals(1, Product::count());
+    }
+
+    /** @test */
     public function the_slug_is_required()
     {
         $category = $this->createCategory();
