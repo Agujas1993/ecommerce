@@ -124,4 +124,24 @@ class UIFiltersTest extends DuskTestCase
                 ->screenshot('cleanDateInput-test');
         });
     }
+
+    /** @test */
+    public function it_is_possible_to_select_the_shown_products_per_page()
+    {
+        $this->createProduct();
+        $this->createProducts(10);
+        $admin = $this->createAdmin();
+
+        $this->browse(function (Browser $browser) use ($admin){
+            $browser
+                ->loginAs($admin)
+                ->visit('/admin/products2')
+                ->pause(1000)
+                ->select('paginate', '10')
+                ->pause(100)
+                ->assertSee( 'Mostrando 1 al 10 de 11 resultados')
+                ->pause(100)
+                ->screenshot('paginate-test');
+        });
+    }
 }

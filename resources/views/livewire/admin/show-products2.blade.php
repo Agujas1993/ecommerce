@@ -11,7 +11,7 @@
     </x-slot>
     <x-table-responsive>
         <div x-data="{ open: false }">
-        <select wire:model="per_page" class="bg-gray-200">
+        <select wire:model="per_page" class="bg-gray-200" name="paginate">
             <option value="10">Mostrar 10</option>
             <option value="15">Mostrar 15</option>
             <option value="20">Mostrar 20</option>
