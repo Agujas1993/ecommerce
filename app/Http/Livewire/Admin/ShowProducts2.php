@@ -10,6 +10,7 @@ use App\Models\Size;
 use App\Models\Sortable;
 use App\Models\Subcategory;
 use App\ProductFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -80,6 +81,15 @@ class ShowProducts2 extends Component
     public function updatingTo()
     {
         $this->resetPage();
+    }
+
+    public function updatedCategory($value)
+    {
+        $this->subcategories = Subcategory::where('category_id', $value)->get();
+        $this->brands = Brand::whereHas('categories', function(Builder $query) use ($value) {
+            $query->where('category_id', $value);
+        })->get();
+        $this->reset(['subcategory', 'brand']);
     }
 
     public function updatingSearchSize()
