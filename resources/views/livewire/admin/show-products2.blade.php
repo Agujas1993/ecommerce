@@ -9,7 +9,7 @@
             </x-button-link>
         </div>
     </x-slot>
-    <x-table-responsive>
+    <div class="p-4">
         <div x-data="{ open: false }">
         <select wire:model="per_page" class="bg-gray-200" name="paginate">
             <option value="10">Mostrar 10</option>
@@ -62,18 +62,26 @@
                         <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
                         @endforeach
                     </select>
-                </div>
-                <div>
                     <label class="ml-2"><b>
                             Marcas:
                         </b>
                     </label>
-                <select wire:model.lazy="brand">
-                    <option value="all" selected disabled>Seleccionar una marca</option>
-                    @foreach($brands as $brand)
-                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                    @endforeach
-                </select>
+                    <select wire:model.lazy="brand">
+                        <option value="all" selected disabled>Seleccionar una marca</option>
+                        @foreach($brands as $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                        @endforeach
+                    </select>
+                    <label><b>
+                            Estado
+                        </b>
+                    </label>
+                    <select wire:model="status">
+                        <option value="all">Cualquiera</option>
+                        <option value="1">Borrador</option>
+                        <option value="2">Publicado</option>
+                    </select>
+                </div>
 
                     <label class="ml-2"><b>
                             Fechas:
@@ -93,21 +101,28 @@
                             Precio:
                         </b>
                     </label>
-                    <input type="text" size="9" placeholder="Precio mínimo" wire:model="minPrice"/>
-                    <input type="text" size="9" placeholder="Precio máximo" wire:model="maxPrice"/>
-                </div>
-                <div class="mt-2">
+                    <input type="text" size="10" placeholder="Precio mínimo" wire:model="minPrice"/>
+                    <input type="text" size="10" placeholder="Precio máximo" wire:model="maxPrice"/>
                 <span class="ml-2"><b>Stock: </b></span>
                 @foreach($quantities as $stock)
                     <label for="">{{ $stock . "+" }}</label>
-                <input type="radio" name="stock" class="mr-2" wire:model="stock" value="{{ $stock }}">
+                    <input type="radio" name="stock" class="mr-2" wire:model="stock" value="{{ $stock }}">
                 @endforeach
-                    <span x-data="{ open: false }" @click.away="open = false">
+                <span x-data="{ open: false }" @click.away="open = false">
                         <input type="radio" name="stock"  @click="open = !open" >Otro</button>
-                        <span x-show="open">
-                    <input type="text" class="mr-2" wire:model="stock" value="{{ $stock }}">
+                    <span x-show="open">
+                    <input type="text" size="4" class="mr-2" wire:model="stock" value="{{ $stock }}">
                         </span>
                         </span>
+                <label class="ml-4"><b>
+                        Tallas:
+                    </b>
+                </label>
+                <x-jet-input class="w-64"
+                             wire:model="searchSize"
+                             type="text"
+                             placeholder="Introduzca la talla a buscar" />
+                <div class="mt-2">
                     <label class="ml-4"><b>
                             Colores:
                         </b>
@@ -117,24 +132,6 @@
                         <label for="color_{{ $color_id }}">{{ __(ucfirst($color_name)) }}</label>
                         <input type="checkbox" id="color_{{ $color_id }}" name="selectedColors[]" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}"/>
                     @endforeach
-</div>
-                    <label class="ml-4"><b>
-                            Tallas:
-                        </b>
-                    </label>
-                    <x-jet-input class="w-64"
-                                 wire:model="searchSize"
-                                 type="text"
-                                 placeholder="Introduzca la talla a buscar" />
-                    <label><b>
-                        Estado
-                        </b>
-                    </label>
-                    <select wire:model="status">
-                        <option value="all">Cualquiera</option>
-                        <option value="1">Borrador</option>
-                        <option value="2">Publicado</option>
-                    </select>
                 </div>
                 </div>
         </div>
@@ -174,7 +171,7 @@
                     </th>
                         @endif
                         @if($this->showColumn('Stock'))
-                            <th scope="col" wire:click="sort('sizes.name')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" wire:click="sort('quantity')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <button>STOCK</button>
                             </th>
                         @endif
@@ -324,7 +321,7 @@
                 {{ $products->links() }}
             </div>
         @endif
-    </x-table-responsive>
+    </div>
     @push('scripts')
         <script>
             document.addEventListener("DOMContentLoaded", () => {
