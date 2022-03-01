@@ -140,11 +140,6 @@ class ShowProducts2 extends Component
         $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
     }
 
-    public function updatingSelectedSubcategories()
-    {
-        $this->resetPage();
-    }
-
     public function updatingCategory()
     {
         $this->resetPage();

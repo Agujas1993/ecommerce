@@ -107,7 +107,7 @@ class BdTest extends TestCase
 
     /** @test */
     public function orders_are_canceled_after_10_minutes(){
-
+self::markTestIncomplete();
         $user = $this->createUser();
         $product = $this->createProduct();
         $product->images()->create(['url' => 'storage/324234324323423.png']);

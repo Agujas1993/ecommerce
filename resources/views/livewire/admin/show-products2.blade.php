@@ -37,8 +37,9 @@
                             Producto:
                         </b>
                     </label>
-                    <x-jet-input class="w-96"
-                                 wire:model.debounce.500ms="search"
+                    <x-input.text size="32"
+                                  name="search"
+                                 model="search"
                                  type="text"
                                  placeholder="Introduzca el nombre del producto a buscar" />
                     <label class="ml-2"><b>
@@ -90,9 +91,9 @@
 
 <div class="inline-block" wire:ignore>
 
-                    <input type="text" placeholder="Desde" class="dateFlatpicker" wire:model="from" name="from" id="from" data-date-format="d/m/Y">
+                    <x-input.date placeholder="Desde" model="from" name="from"/>
 
-                    <input type="text" placeholder="Hasta" class="dateFlatpicker" wire:model="to" name="to" id="to" data-date-format="d/m/Y">
+                    <x-input.date placeholder="Hasta" model="to" name="to"/>
 </div>
                     <div class="inline-block" wire:ignore>
                     <button class="form-control bg-red-500 p-2" @click="flatpickr('.dateFlatpicker')[0].clear();flatpickr('.dateFlatpicker')[1].clear();" title="clear" >Limpiar</button>
@@ -101,12 +102,12 @@
                             Precio:
                         </b>
                     </label>
-                    <input type="text" size="10" placeholder="Precio mínimo" wire:model="minPrice"/>
-                    <input type="text" size="10" placeholder="Precio máximo" wire:model="maxPrice"/>
+                    <x-input.text name="minPrice" type="text" size="10" placeholder="Precio mínimo" model="minPrice"/>
+                    <x-input.text name="maxPrice" type="text" size="10" placeholder="Precio máximo" model="maxPrice"/>
                 <span class="ml-2"><b>Stock: </b></span>
                 @foreach($quantities as $stock)
                     <label for="">{{ $stock . "+" }}</label>
-                    <input type="radio" name="stock" class="mr-2" wire:model="stock" value="{{ $stock }}">
+                    <x-input.radio name="stock" class="mr-2" model="stock" value="{{ $stock }}"/>
                 @endforeach
                 <span x-data="{ open: false }" @click.away="open = false">
                         <input type="radio" name="stock"  @click="open = !open" >Otro</button>
@@ -118,19 +119,20 @@
                         Tallas:
                     </b>
                 </label>
-                <x-jet-input class="w-64"
-                             wire:model="searchSize"
+                <x-input.text size="20"
+                              name="searchSize"
+                             model="searchSize"
                              type="text"
                              placeholder="Introduzca la talla a buscar" />
                 <div class="mt-2">
-                    <label class="ml-4"><b>
+                    <label class="ml-2"><b>
                             Colores:
                         </b>
                     </label>
 <div class="inline-block"  wire:ignore>
                     @foreach($colorsf as $color_id => $color_name)
                         <label for="color_{{ $color_id }}">{{ __(ucfirst($color_name)) }}</label>
-                        <input type="checkbox" id="color_{{ $color_id }}" name="selectedColors[]" class="mr-2" wire:model="selectedColors" value="{{ $color_id }}"/>
+                        <x-input.checkbox id="color_{{ $color_id }}" name="selectedColors[]" model="selectedColors" value="{{ $color_id }}"/>
                     @endforeach
                 </div>
                 </div>
