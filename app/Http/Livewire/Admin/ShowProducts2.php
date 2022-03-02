@@ -209,8 +209,6 @@ class ShowProducts2 extends Component
 
     public function render(ProductFilter $productFilter)
     {
-
-        $sortable = new Sortable($this->originalUrl);
-        return view('livewire.admin.show-products2', ['products' => $this->getProducts($productFilter), 'sortable' => $sortable,'selectedColors' => collect(request('selectedColors'))])->layout('layouts.admin');
+        return view('livewire.admin.show-products2', ['products' => $this->getProducts($productFilter)])->layout('layouts.admin');
     }
 }

@@ -208,27 +208,6 @@ class FilterTest extends TestCase
     }
 
     /** @test */
-    public function it_filters_by_stock()
-    {
-        $admin = $this->createAdmin();
-        $category = $this->createCustomCategory('Altavoces');
-        $subcategory = $this->createCustomSubcategory($category->id, 'Altavoces portátiles');
-        $brand = $category->brands()->create(['name' => 'LG']);
-        $product = $this->createCustomProduct('Altavoz', $subcategory, $brand, '2');
-        $product->quantity = 20;
-        $product->save();
-        $product1 = $this->createProduct();
-        $product1->quantity = 10;
-        $product1->save();
-
-        $this->actingAs($admin)->get('/admin/products2?stock=20')
-            ->assertOk()
-            ->assertSee($product->name)
-            ->assertSee($product->stock)
-            ->assertDontSee($product1->name);
-    }
-
-    /** @test */
     public function it_filters_by_color()
     {
         $admin = $this->createAdmin();
