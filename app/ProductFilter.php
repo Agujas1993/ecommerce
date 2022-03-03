@@ -108,5 +108,4 @@ class ProductFilter extends QueryFilter
 
         $query->whereDate('products.created_at', '<=', $date);
     }
-
 }

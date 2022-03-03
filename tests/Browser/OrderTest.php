@@ -6,6 +6,8 @@ namespace Tests\Browser;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\District;
+use App\Models\Order;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
@@ -111,6 +113,7 @@ class OrderTest extends DuskTestCase
                 ->assertSeeIn('li.py-6', 'No tiene agregado ningún item en el carrito')
                 ->screenshot('createsOrder-test');
         });
+        $this->assertDatabaseEmpty('shoppingcart');
     }
 
     /** @test */
@@ -120,10 +123,14 @@ class OrderTest extends DuskTestCase
         $user = $this->createUser();
 
         $department = Department::factory()->create(['name' => 'Murcia']);
+        $department1 = Department::factory()->create(['name' => 'Cartagena']);
         $city = City::factory()->create(['name' => 'Alhama', 'cost' => 10, 'department_id' => $department->id]);
+        $city1 = City::factory()->create(['name' => 'Los Dolores', 'cost' => 10, 'department_id' => $department1->id]);
         $district = District::factory()->create(['name' => 'Barrio Perdido', 'city_id' => $city->id]);
+        $district1 = District::factory()->create(['name' => 'Barrio Cartaginense', 'city_id' => $city1->id]);
 
-        $this->browse(function (Browser $browser) use ($product, $department, $city, $district, $user) {
+        $this->browse(function (Browser $browser) use ($product, $department, $city, $district, $user, $department1
+        ,$district1, $city1) {
             $browser->loginAs($user->id)
                 ->visit('/')
                 ->pause(100)
@@ -145,17 +152,20 @@ class OrderTest extends DuskTestCase
                 ->click('option:nth-of-type(2)')
                 ->pause(100)
                 ->assertSee($department->name)
+                ->assertSee($department1->name)
                 ->pause(100)
                 ->click('div.px-6 > div:nth-of-type(3) > select.form-control')
                 ->pause(100)
                 ->click('div.px-6 > div:nth-of-type(3) > select.form-control > option:nth-of-type(2)')
                 ->pause(100)
                 ->assertSee($city->name)
+                ->assertDontSee($city1->name)
                 ->pause(100)
                 ->click('div.px-6 > div:nth-of-type(4) > select.form-control')
                 ->pause(100)
                 ->click('div.px-6 > div:nth-of-type(4) > select.form-control > option:nth-of-type(2)')
                 ->assertSee($district->name)
+                ->assertDontSee($district1->name)
                 ->screenshot('selectsLoadCorrectly-test');
         });
     }
@@ -185,5 +195,54 @@ class OrderTest extends DuskTestCase
                 ->assertSee($order->id)
                 ->screenshot('myOrders-test');
         });
+    }
+
+    /** @test */
+    public function orders_are_canceled_after_10_minutes()
+    {
+        $product = $this->createProduct();
+
+        $user = $this->createUser();
+
+        $this->browse(function (Browser $browser) use ($user, $product) {
+            $browser->loginAs($user)
+                ->visit('products/' . $product->id)
+                ->press('AGREGAR AL CARRITO')
+                ->pause(1000)
+                ->visitRoute('orders.create')
+                ->type('div.bg-white > div.mb-4 > input', 'samuel')
+                ->type('div.bg-white > div:nth-of-type(2) > input', '45345453454')
+                ->radio('envio_type', 1)
+                ->press('CONTINUAR CON LA COMPRA')
+                ->pause(1000);
+        });
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user->id)
+                ->visit('/')
+                ->pause(100)
+                ->assertSee('Tiene 1 ordenes pendientes de pago. Pagar');
+        });
+            $order = Order::first();
+            $order->created_at = now()->subMinutes(11);
+            $order->save();
+
+            $this->assertDatabaseHas('orders', [
+                'id' => $order->id,
+                'user_id' => $user->id,
+                'status' => 1
+            ]);
+
+            $this->artisan('schedule:run');
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->refresh()
+                ->visit('/')
+                ->pause(4000)
+                ->assertDontSee('Tiene 1 ordenes pendientes de pago. Pagar')
+            ->screenshot('itCancelsOrdersAfterTenMinutes-Test');
+        });
+        $this->assertDatabaseHas('orders', ['id'=>$order->id, 'user_id' => $user->id, 'status'=> 5]);
+        $this->assertDatabaseHas('products', ['id' => $product->id, 'name' => $product->name, 'quantity' => $product->quantity]);
     }
 }

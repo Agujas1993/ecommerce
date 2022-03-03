@@ -60,6 +60,10 @@ class CreateProductsTest extends TestCase
             ->call('save')
             ->assertRedirect('admin/products/1/edit');
         $this->assertEquals(1,Product::count());
+        $this->assertDatabaseHas('products', ['name' => 'algo', 'slug' => 'algo',
+            'subcategory_id' =>$subcategory->id, 'brand_id' =>$brand->id,
+            'description' => 'dsdsajdoasdj',
+            'price' => '118.99', 'quantity' => 20]);
     }
 
     /** @test */
