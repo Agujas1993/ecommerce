@@ -200,6 +200,7 @@ class ShowProducts2 extends Component
             ->select('products.*')
             ->orderBy($this->sortColumn, $this->sortDirection)
 
+
             ->paginate($this->per_page);
 
         $products->appends($productFilter->valid());

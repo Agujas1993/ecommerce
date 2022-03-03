@@ -65,7 +65,7 @@ class BdTest extends TestCase
         $user = $this->createUser();
         $product = $this->createProduct();
         $this->actingAs($user);
-        Livewire::test(AddCartItem::class, ['product' => $product])
+        Livewire::test(AddCartItem::class, ['product' => $product, 'qty' => 2])
             ->call('addItem', $product);
 
         Livewire::test(CreateOrder::class, [
@@ -84,7 +84,7 @@ class BdTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('products', [
-            'quantity' => 19
+            'quantity' => $product->quantity - 2
         ]);
     }
 
@@ -116,7 +116,7 @@ class BdTest extends TestCase
         $this->assertDatabaseHas('color_size', [
             'color_id' => $product->colors()->first()->id,
             'size_id' => $product->sizes()->first()->id,
-            'quantity' => 19
+            'quantity' => $product->quantity - 1
         ]);
     }
 
@@ -126,7 +126,7 @@ class BdTest extends TestCase
         $user = $this->createUser();
         $product = $this->createColorProduct();
         $this->actingAs($user);
-        Livewire::test(AddCartItemColor::class, ['product' => $product])
+        Livewire::test(AddCartItemColor::class, ['product' => $product, 'qty' => 3])
             ->set('options', ['color_id' => $product->colors()->first()->id])
             ->call('addItem', $product);
 
@@ -147,7 +147,7 @@ class BdTest extends TestCase
 
         $this->assertDatabaseHas('color_product', [
             'color_id' => $product->colors()->first()->id,
-            'quantity' => 19
+            'quantity' => $product->quantity - 3
         ]);
 
     }

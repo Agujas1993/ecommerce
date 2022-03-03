@@ -28,7 +28,7 @@ class UIFiltersTest extends DuskTestCase
                 ->pause(1000)
                 ->press('Mostrar/Ocultar columnas')
                 ->pause(100)
-                ->click('div > input:nth-of-type(2)')
+                ->check('#Nombre')
                 ->pause(100)
                 ->assertDontSeeIn('table','Nombre')
                 ->pause(100)

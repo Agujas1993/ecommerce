@@ -10,20 +10,38 @@
         </div>
     </x-slot>
     <div class="p-4">
-        <div x-data="{ open: false }">
+        <div class="flex space-x-3">
         <select wire:model="per_page" class="bg-gray-200" name="paginate">
             <option value="10">Mostrar 10</option>
             <option value="15">Mostrar 15</option>
             <option value="20">Mostrar 20</option>
             <option value="50">Mostrar 50</option>
         </select>
+<div class="flex inline-flex">
+                <x-jet-dropdown width="52">
+                    <x-slot name="trigger">
+                        <button
+                            class="outline-none focus:outline-none border px-3 py-1 bg-white rounded-l flex items-center min-w-32 h-10 form-control">
+                            <span class="pr-1 pl-1 flex-1">Mostrar/Ocultar columnas</span>
+                            <span>
+                           <svg class="ml-2 w-4 h-4 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 9l-7 7-7-7"></path>
+                           </svg>
+                        </span>
+                        </button>
+                    </x-slot>
+                    <x-slot name="content">
+                        @foreach($columns as $column)
+                            <div class="w-max px-6 py-2">
+                                <input type="checkbox" id="{{$column}}" wire:model="selectedColumns"
+                                       value="{{$column}}">
+                                <label for="{{$column}}" class="cursor-pointer">{{$column}}</label></div>
+                        @endforeach
+                    </x-slot>
+                </x-jet-dropdown>
 
-        <b><button @click="open = !open" class="mt-4 mb-2 form-control bg-blue-400 p-2">Mostrar/Ocultar columnas</button></b>
-        <div x-show="open" x-cloak>
-        @foreach($columns as $column)
-            <input type="checkbox" wire:model="selectedColumns" value="{{$column}}" class="form-control inline-block ml-4">
-            <label>{{$column}}</label>
-        @endforeach
         </div>
         </div>
         <div x-data="{ open: false }" >
@@ -242,8 +260,6 @@
         </script>
     @endpush
 </div>
-
-
-
+</div>
 
 
