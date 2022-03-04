@@ -173,13 +173,10 @@ class OrderTest extends DuskTestCase
     /** @test */
     public function my_orders_work_correctly()
     {
-        $user = $this->createUser();
-
-        $this->createProduct();
         $order = $this->createOrder();
 
-        $this->browse(function (Browser $browser) use ($order, $user){
-            $browser->loginAs($user->id)
+        $this->browse(function (Browser $browser) use ($order){
+            $browser->loginAs(1)
                 ->visit('/')
                 ->pause(100)
                 ->click('.rounded-full .object-cover')

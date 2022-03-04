@@ -118,8 +118,7 @@ class ShoppingCartTest extends DuskTestCase
     /** @test */
     public function it_is_not_possible_to_add_color_products_that_are_out_of_stock()
     {
-        $product = $this->createColorProduct();
-        $product->colors()->update(['quantity' => 0]);
+        $this->createOutOfStockColorProduct();
 
         $this->browse(function (Browser $browser){
             $browser->visit('/')

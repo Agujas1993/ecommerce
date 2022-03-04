@@ -37,8 +37,7 @@ class SearchTest extends DuskTestCase
         $product = $this->createProduct();
         $this->createProducts(5);
 
-        Role::create(['name' => 'admin']);
-        $user = $this->createUser()->assignRole('admin');
+        $user = $this->createAdmin();
 
         $this->browse(function (Browser $browser) use ($product, $user) {
             $browser->loginAs($user->id)

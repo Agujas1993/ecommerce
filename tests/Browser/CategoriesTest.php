@@ -22,22 +22,16 @@ class CategoriesTest extends DuskTestCase
         $categories = $this->createCategories();
 
         $this->browse(function (Browser $browser) use($categories){
+            foreach ($categories as $category)
+
             $browser->visit('/')
                 ->pause(100)
                     ->assertSee('Categorías')
                 ->pause(100)
                     ->click('@categorias')
                 ->pause(100)
-                ->assertSee($categories->category1)
-                ->pause(100)
-                ->assertSee($categories[1])
-                ->pause(100)
-                ->assertSee($categories[2])
-                ->pause(100)
-                ->assertSee($categories[3])
-                ->pause(100)
-                ->assertSee($categories[4])
-                    ->screenshot('categories-test');
+                ->assertSee($category->name)
+            ->screenshot('showsCategories');
         });
     }
 
@@ -85,29 +79,14 @@ class CategoriesTest extends DuskTestCase
     /** @test */
     public function it_shows_at_least_5_products_from_a_category()
     {
-        $category = $this->createCategory();
 
-        $subcategory = $this->createSubcategory();
+        $products = $this->products();
 
-        $brand = $category->brands()->create(['name' => 'LG']);
-
-        $product1 = $this->createCustomProduct('LG2080', $subcategory, $brand, 2);
-        $product2 = $this->createCustomProduct('LGK40', $subcategory, $brand, 2);
-        $product3 = $this->createCustomProduct('LGQ60', $subcategory, $brand, 2);
-        $product4 = $this->createCustomProduct('LGP40', $subcategory, $brand, 2);
-        $product5 = $this->createCustomProduct('LGH90', $subcategory, $brand, 2);
-
-        $categoryTitle = strtoupper($category->name);
-
-        $this->browse(function (Browser $browser) use ($categoryTitle, $product1, $product2, $product3, $product4, $product5) {
+        $this->browse(function (Browser $browser) use ($products) {
+            foreach ($products as $product)
             $browser->visit('/')
-                ->assertSee($categoryTitle)
                 ->assertSee('Ver más')
-                ->assertSee($product1->name)
-                ->assertSee($product2->name)
-                ->assertSee($product3->name)
-                ->assertSee($product4->name)
-                ->assertSee($product5->name)
+                ->assertSee($product->name)
                 ->screenshot('5_products_from_a_category-test');
         });
     }

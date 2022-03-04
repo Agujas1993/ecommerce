@@ -17,8 +17,6 @@ class UIFiltersTest extends DuskTestCase
     /** @test */
     public function it_hides_the_unchecked_columns()
     {
-        $this->createProduct();
-        $this->createProducts(3);
         $admin = $this->createAdmin();
 
         $this->browse(function (Browser $browser) use ($admin){
