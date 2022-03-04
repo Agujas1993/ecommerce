@@ -13,7 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
-trait TestHelpers
+trait CreateData
 {
 
     public function withData(array $custom = [])
@@ -259,6 +259,20 @@ trait TestHelpers
 
         return $product;
     }
+
+    public function createCategories()
+    {
+        return [
+            'category1' => $this->createCategory(),
+        'category2' => $this->createCustomCategory('TV, audio y video'),
+        'category3' => $this->createCustomCategory('Consola y videojuegos'),
+        'category4' => $this->createCustomCategory('Computación'),
+        'category5' => $this->createCustomCategory('Moda'),
+        ];
+
+    }
+
+
     public function assertDatabaseEmpty($table, $connection = null)
     {
         $total = $this->getConnection($connection)->table($table)->count();

@@ -1,0 +1,11 @@
+Tests que utilizan el CreateData:
+- only_a_logged_user_can_create_an_order
+- the_available_stock_of_a_color_product_changes
+- the_size_color_products_details_are_shown
+- it_shows_the_login_and_register_options
+- it_is_not_possible_to_add_size_color_products_that_are_out_of_stock
+-
+-
+-
+-
+-

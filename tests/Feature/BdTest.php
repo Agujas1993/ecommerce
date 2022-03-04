@@ -13,13 +13,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 use Tests\TestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class BdTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
-    use TestHelpers;
+    use CreateData;
 
 
     /** @test */

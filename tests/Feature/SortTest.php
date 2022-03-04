@@ -7,13 +7,13 @@ use App\Models\Size;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class SortTest extends TestCase
 {
     use DatabaseMigrations;
     use RefreshDatabase;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function it_orders_by_id_asc()

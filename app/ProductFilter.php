@@ -74,7 +74,7 @@ class ProductFilter extends QueryFilter
 
     public function stock($query, $stock)
     {
-        return $query->where(Product::getQuantities(), '>=', $stock);
+        return $query->where('quantity', '>=', $stock);
     }
 
     public function status($query, $status)

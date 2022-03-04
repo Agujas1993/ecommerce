@@ -12,13 +12,13 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class OrderTest extends DuskTestCase
 {
     use DatabaseMigrations;
     use RefreshDatabase;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function only_a_logged_user_can_create_an_order()

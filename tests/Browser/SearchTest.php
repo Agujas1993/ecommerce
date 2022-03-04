@@ -7,14 +7,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Spatie\Permission\Models\Role;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class SearchTest extends DuskTestCase
 {
 
     use DatabaseMigrations;
     use RefreshDatabase;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function it_searchs_by_product_name()

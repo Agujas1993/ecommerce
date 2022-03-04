@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 
 class CategoriesTest extends DuskTestCase
@@ -14,33 +14,29 @@ class CategoriesTest extends DuskTestCase
 
     use DatabaseMigrations;
     use RefreshDatabase;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function it_shows_the_categories()
     {
-        $category1 = $this->createCategory();
-        $category2 = $this->createCustomCategory('TV, audio y video');
-        $category3 = $this->createCustomCategory('Consola y videojuegos');
-        $category4 = $this->createCustomCategory('Computación');
-        $category5 = $this->createCustomCategory('Moda');
+        $categories = $this->createCategories();
 
-        $this->browse(function (Browser $browser) use($category1, $category2, $category3, $category4, $category5){
+        $this->browse(function (Browser $browser) use($categories){
             $browser->visit('/')
                 ->pause(100)
                     ->assertSee('Categorías')
                 ->pause(100)
                     ->click('@categorias')
                 ->pause(100)
-                ->assertSee($category1->name)
+                ->assertSee($categories->category1)
                 ->pause(100)
-                ->assertSee($category2->name)
+                ->assertSee($categories[1])
                 ->pause(100)
-                ->assertSee($category3->name)
+                ->assertSee($categories[2])
                 ->pause(100)
-                ->assertSee($category4->name)
+                ->assertSee($categories[3])
                 ->pause(100)
-                ->assertSee($category5->name)
+                ->assertSee($categories[4])
                     ->screenshot('categories-test');
         });
     }

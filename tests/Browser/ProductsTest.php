@@ -8,13 +8,13 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class ProductsTest extends DuskTestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function the_products_details_are_shown()
@@ -70,7 +70,6 @@ class ProductsTest extends DuskTestCase
     public function the_size_color_products_details_are_shown()
     {
         $product = $this->createColorSizeProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->browse(function (Browser $browser) use($product) {
             $browser->visit('products/' . $product->id)
@@ -86,7 +85,6 @@ class ProductsTest extends DuskTestCase
                 ->assertButtonDisabled('AGREGAR AL CARRITO DE COMPRAS')
                 ->assertSee($product->description)
                 ->assertPresent('div.flexslider')
-                ->assertPresent('img.flex-active')
                 ->screenshot('sizeColorProductDetails-test');
         });
     }

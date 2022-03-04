@@ -10,14 +10,14 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class NavTest extends TestCase
 {
 
     use RefreshDatabase;
     use DatabaseMigrations;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function it_loads_the_nav_bar()

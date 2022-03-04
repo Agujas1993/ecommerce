@@ -9,12 +9,12 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class EditProductsTest extends TestCase
 {
     use RefreshDatabase;
-    use TestHelpers;
+    use CreateData;
     use DatabaseMigrations;
 
     /** @test */

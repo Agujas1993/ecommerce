@@ -7,14 +7,14 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class UserOptionsTest extends DuskTestCase
 {
 
      use RefreshDatabase;
      use DatabaseMigrations;
-     use TestHelpers;
+     use CreateData;
 
     /** @test */
     public function it_shows_the_login_and_register_options()

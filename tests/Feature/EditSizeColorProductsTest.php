@@ -11,14 +11,14 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
-use Tests\TestHelpers;
+use Tests\CreateData;
 
 class EditSizeColorProductsTest extends TestCase
 {
 
     use DatabaseMigrations;
     use RefreshDatabase;
-    use TestHelpers;
+    use CreateData;
 
     /** @test */
     public function it_creates_a_size_color_product()
