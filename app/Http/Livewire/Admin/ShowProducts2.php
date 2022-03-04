@@ -2,14 +2,13 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Filters\ProductFilter;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\Size;
-use App\Models\Sortable;
 use App\Models\Subcategory;
-use App\ProductFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Livewire\Component;

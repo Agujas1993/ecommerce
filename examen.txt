@@ -9,3 +9,6 @@ Tests que utilizan el CreateData:
 -
 -
 -
+
+En el ejercicio 4 he creado la carpeta llamada "Filters" en el directorio "app" y he introducido las clases al ya tener
+esta metodología implementada.

@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Filters;
 
-use App\Models\Product;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
