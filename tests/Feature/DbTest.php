@@ -15,7 +15,7 @@ use Livewire\Livewire;
 use Tests\TestCase;
 use Tests\CreateData;
 
-class BdTest extends TestCase
+class DbTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
@@ -27,7 +27,6 @@ class BdTest extends TestCase
     {
         $user = $this->createUser();
         $product = $this->createProduct();
-        $product->images()->create(['url' => 'storage/324234324323423.png']);
 
         $this->get('/login')->assertSee('Correo electrónico');
         $credentials = [
@@ -42,8 +41,20 @@ class BdTest extends TestCase
         Cart::add([
             'id' => $product->id,
             'name' => $product->name,
-            'qty' => '2',
+            'qty' => '1',
             'price' => $product->price,
+            'weight' => 550,
+        ]);
+
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory();
+        $brand = $category->brands()->create(['name' => 'LG']);
+        $product1 = $this->createCustomProduct('Cascos', $subcategory, $brand, '2');
+        Cart::add([
+            'id' => $product1->id,
+            'name' => $product1->name,
+            'qty' => '2',
+            'price' => $product1->price,
             'weight' => 550,
         ]);
 
@@ -55,7 +66,12 @@ class BdTest extends TestCase
 
         $this->post('/login', $credentials);
 
-        $this->get('/shopping-cart')->assertSee($product->name);
+        $this->get('/shopping-cart')->assertSee($product->name)->assertSee($product1->name)
+            ->assertSee($product->price)
+        ->assertSee($product1->price*2)
+        ->assertSee(1)
+        ->assertSee(2);
+
 
     }
 
