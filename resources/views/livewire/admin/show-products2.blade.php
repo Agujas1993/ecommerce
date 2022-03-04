@@ -119,6 +119,9 @@
                         <button>TALLAS</button>
                     </th>
                         @endif
+                        <th scope="col" wire:click="sort('')"  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <button>CANTIDAD VENDIDA</button>
+                        </th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -230,6 +233,11 @@
                             @endif
                         </td>
                             @endif
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @foreach($orders as $order)
+                                    {{ $order->content}}
+                                @endforeach
+                            </td>
                     </tr>
                 @endforeach
                 </tbody>

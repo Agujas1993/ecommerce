@@ -6,6 +6,7 @@ use App\Filters\ProductFilter;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Size;
 use App\Models\Subcategory;
@@ -43,7 +44,7 @@ class ShowProducts2 extends Component
     public $originalUrl;
     public $order;
     public $status;
-
+    public $orders;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -106,6 +107,7 @@ class ShowProducts2 extends Component
         $this->brands = Brand::orderBy('name')->get();
         $this->colorsf = Color::pluck('name', 'id')->toArray();
         $this->originalUrl = $request->url();
+        $this->orders = Order::all();
     }
 
     public function updatingPerPage()
